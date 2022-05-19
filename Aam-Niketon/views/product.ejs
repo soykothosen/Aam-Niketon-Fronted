@@ -1,0 +1,218 @@
+<%- include('header', {userId:userId, login_status: login_status}); -%>
+
+
+      <div class="container mt-5">
+
+
+        <div class="row">
+
+            <div class="col-lg-5">
+
+                <div class="container">
+
+                    <img src="<%= product[0].product_image_url %> " class="img-fluid" alt="...">
+
+                    <div class="fs-5 fw-bold baloo-da-2 text-center text-success my-3"><%= product[0].product_name %></div>
+
+    
+
+                </div>
+
+            </div>
+
+            <!-- In Large Screen-->
+
+            <div class="col-lg-6 d-none d-sm-block">
+
+                <div class="container">
+
+                    <div class="fs-5 fw-bold baloo-da-2 text-success my-3"><%= product[0].product_name %></div>
+
+                <div class="fs-6 hind-siliguri"> <%= product[0].short_des %>  </div>
+
+                <div class="fs-6 hind-siliguri my-1"><del>মূল্য - <%= product[0].main_price %> BDT</del>  </div>
+
+                <div class="fs-6 fw-bold hind-siliguri my-1 text-primary"><%= product[0].discount %>% ছাড় চলছে</div>
+
+                <% var price = Math.floor(((100 - product[0].discount)/100)*product[0].main_price); %>
+        
+
+                <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
+
+                <!-- <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> 2 = 12000</div> -->
+
+                </div>
+
+                <div class="container-fluid bg-light p-3 my-2 rounded-3">
+
+                    <div class="row">
+
+                        <!-- <div class="col-lg-4">
+
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-outline-dark fw-bold"><i class="bi bi-dash-lg"></i></button>
+                                <button type="button" class="btn btn-outline-dark">12</button>
+                                <button type="button" class="btn btn-outline-dark fw-bold"><i class="bi bi-plus-lg"></i></button>
+                              </div>
+
+                        </div> -->
+
+                        <div class="col-lg-4">
+
+                          <% if( userId != null){ %>
+
+                            <a type="button" onclick= "addtoCart( '<%= product[0].id %>' )" class="btn btn-success w-100 fw-bold hind-siliguri">Add to Cart </a>
+
+                       <% } else{ %>
+
+                        <a type="button" href="/login" class="btn btn-success w-100 fw-bold hind-siliguri">Add to Cart</a>
+
+                       <% } %>
+
+
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <button type="button" class="btn btn-dark w-100 fw-bold baloo-da-2">Buy Now</button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <!-- In Small Screen -->
+
+            <div class="col-lg-6 d-block d-sm-none">
+
+                
+                <div class="container-fluid text-center">
+
+                    
+                <div class="fs-6 text-center hind-siliguri"> <%= product[0].short_des %>  </div>
+
+                <div class="fs-6 hind-siliguri  my-1"><del>মূল্য - <%= product[0].main_price %> BDT</del>  </div>
+
+                <div class="fs-6 fw-bold hind-siliguri  my-1 text-primary"><%= product[0].discount %>% ছাড় চলছে</div>
+
+                <% var price = Math.floor(((100 - product[0].discount)/100)*product[0].main_price); %>
+        
+
+                <a type="button" class="btn btn-warning my-1  fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>  
+
+<!-- 
+                <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> 2 = 12000</div>
+
+                 -->
+
+                <div class="container-fluid bg-light p-3 my-2 rounded-3">
+
+                    <div class="row">
+
+                        <!-- <div class="col-lg-4">
+
+                            <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-outline-dark fw-bold"><i class="bi bi-dash-lg"></i></button>
+                                <button type="button" class="btn btn-outline-dark">12</button>
+                                <button type="button" class="btn btn-outline-dark fw-bold"><i class="bi bi-plus-lg"></i></button>
+                              </div>
+
+                        </div> -->
+
+                        <div class="col-lg-4">
+
+                          <% if( userId != null){ %>
+
+                            <a type="button" onclick= "addtoCart( '<%= product[0].id %>' )" class="btn btn-success w-100 fw-bold hind-siliguri">Add to Cart </a>
+
+                       <% } else{ %>
+
+                        <a type="button" href="/login" class="btn btn-success w-100 fw-bold hind-siliguri mb-3">Add to Cart</a>
+
+                       <% } %>
+                        </div>
+
+                        <div class="col-lg-4">
+
+                            <button type="button" class="btn btn-dark mb-3 w-100 fw-bold baloo-da-2">Buy Now</button>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+      </div>
+
+
+       <!-- Modal -->
+<div class="modal fade" id = "myModal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title baloo-da-2" id="exampleModalLabel">পণ্য টি কার্টে যুক্ত হয়েছে</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-dark baloo-da-2" data-bs-dismiss="modal">আরও পণ্য কার্টে যুক্ত করুন</button>
+        <button type="button" class="btn btn-warning baloo-da-2">Go to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <script>
+
+
+
+      function addtoCart (  product_id ){
+
+          console.log( product_id );
+
+          $.post("http://localhost:8081/addtocart",
+            {
+      
+             product_id: product_id
+  
+             },
+
+             function(data, status){
+
+             console.log(data);
+
+             if(data == "add to cart"){
+
+              $('#myModal').modal('show');
+
+             }
+
+
+             
+ 
+            });
+
+     }
+
+
+    </script>
+
+
+      <%- include('footer'); -%>
+
+

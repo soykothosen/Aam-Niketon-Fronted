@@ -1,0 +1,294 @@
+<%- include('header', {userId:userId, login_status: login_status, category: category}); -%>
+
+
+
+     
+
+      <div class="row my-3  ">
+
+        <div class="col-lg-8 d-flex">
+
+             <!-- Large Screen-->
+
+            <div class="container m-3 ">
+
+                <div class="container mx-5 text-center">
+
+                    <div class="row d-flex justify-content-center align-items-center">
+    
+                        <div class="col-3">
+    
+                
+                            <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Product Name</div>
+    
+                        </div>
+    
+                        <div class="col-3">
+
+                            <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Quantity</div>
+    
+                        </div>
+    
+                        <div class="col-3">
+
+                            <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Price</div>
+    
+                        </div>
+    
+                        <div class="col-3">
+
+                           
+                        </div>
+    
+                    </div>
+
+
+                   <% for(var i = 0 ; i< cart_product.length ; i++) { %>
+
+                    
+                    <div class="row d-flex justify-content-center align-items-center">
+    
+                        <div class="col-3">
+    
+                            <img src="<%= cart_product[i].product_image_url %>" class="img-fluid" alt="...">
+                            <div class="fs-6 fw-bold baloo-da-2 text-success my-3"><%= cart_product[i].product_name %></div>
+    
+                        </div>
+
+                        <% var price = Math.floor(((100 - cart_product[i].discount)/100)*cart_product[i].main_price); %>
+    
+                        <div class="col-3">
+
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <a type="button" onclick="decrease('<%= cart_product[i].id %>', '<%= price %>' )"  class="btn btn-light fw-bold"><i class="bi bi-dash-lg"></i></a>
+                                <a type="button" id = "quantity<%= cart_product[i].id %>" class="btn btn-success">1</a>
+                                <a type="button" onclick="increase('<%= cart_product[i].id %>', '<%= price %>' )" class="btn btn-dark fw-bold"><i class="bi bi-plus-lg"></i></a>
+                              </div>
+    
+                        </div>
+    
+                        <div class="col-3">
+
+                            
+
+                <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
+
+                <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> <a type="button" id = "quantityy<%= cart_product[i].id %>" class="btn btn-light">1</a> = <span id = "subtotal<%= cart_product[i].id %>">  <%= price %> </span> </div>
+    
+                        </div>
+    
+                        <div class="col-3">
+
+                            <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-trash"></i></div>
+    
+                        </div>
+    
+                    </div>
+
+                  
+    
+                    <% }  %> 
+                
+    
+                </div>
+
+            </div>
+
+             <!-- In Small Screen -->
+
+             <div class="container d-block d-none p-2 shadow-sm text-center">
+
+                <% for(var i = 0 ; i< cart_product.length ; i++) { %>
+        
+                
+                <img src="<%= cart_product[i].product_image_url %>" class="img-fluid" alt="...">
+                <div class="fs-6 fw-bold baloo-da-2 text-success my-3"><%= cart_product[i].product_name %></div>
+            
+                <% var price = Math.floor(((100 - cart_product[i].discount)/100)*cart_product[i].main_price); %>
+        
+                <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
+        
+        
+                <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> <a type="button" id = "quantityym<%= cart_product[i].id %>" class="btn btn-light">1</a> = <span id = "subtotalm<%= cart_product[i].id %>">  <%= price %> </span> </div>
+        
+            
+        
+                      <div class="container-fluid bg-light p-3 my-2 rounded-3">
+        
+                <div class="row">
+        
+                    <div class="col-lg-4">
+        
+                        <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                            <a type="button" onclick="decrease('<%= cart_product[i].id %>', '<%= price %>' )"  class="btn btn-dark fw-bold"><i class="bi bi-dash-lg"></i></a>
+                            <a type="button" id = "quantitym<%= cart_product[i].id %>" class="btn btn-success">1</a>
+                            <a type="button" onclick="increasem('<%= cart_product[i].id %>', '<%= price %>' )" class="btn btn-dark fw-bold"><i class="bi bi-plus-lg"></i></a>
+                          </div>
+        
+                    </div>
+        
+                    <div class="col-lg-4">
+        
+                        <button type="button" class="btn btn-success mb-3 w-100 fw-bold hind-siliguri">Delete</button>
+        
+                    </div>
+        
+        
+        
+                </div>
+        
+        
+                        </div>
+        
+                        <% }  %> 
+        
+        
+            </div>
+        
+                
+   
+    
+  
+
+
+
+        </div>
+
+
+
+
+        <div class="col-lg-4">
+
+         
+            <!-- Large Screen-->
+            <div class="container ">
+
+               
+
+                <div class="fs-6 baloo-da-2  text-dark my-3">Have any Voucher ?</div>
+
+                <div class="input-group w-75 mb-3">
+                    <input type="text" class="form-control" placeholder="Enter Code" aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <button class="btn btn-success" type="button" id="button-addon2">Apply</button>
+                  </div>
+
+                  <button class="btn btn-dark" type="button" id="button-addon2">Checkout</button>
+
+            </div>
+
+             <!-- Small Screen-->
+             <div class="container text-center d-block d-none ">
+
+                
+
+
+                <div class="fs-6 baloo-da-2  text-dark my-3">Have any Voucher ?</div>
+
+                <div class="input-group  mb-3">
+                    <input type="text" class="form-control" placeholder="Enter Code" aria-label="Recipient's username" aria-describedby="button-addon2">
+                    <button class="btn btn-success" type="button" id="button-addon2">Apply</button>
+                  </div>
+
+                  <button class="btn btn-dark" type="button" id="button-addon2">Checkout</button>
+
+            </div>
+
+
+
+        </div>
+
+      </div>
+
+
+      <script>
+
+
+
+    
+
+
+     function increase( proid , price ){
+
+
+        var quantityyid = "#quantityy"+proid;
+
+        var quantityy =  $(quantityyid).text()
+
+        $(quantityyid).text(parseInt(quantityy) + 1);
+
+
+
+        var quantityid = "#quantity"+proid;
+
+        var quantity =  $(quantityid).text()
+
+       $(quantityid).text(parseInt(quantity) + 1);
+
+
+       var subtotalid = "#subtotal"+proid;
+
+        var subtotal =  $(subtotalid).text()
+
+       $(subtotalid).text(parseInt(quantity)*parseInt(price) + parseInt(price));
+
+
+
+     }
+
+
+
+
+     function decrease( proid , price ){
+
+
+var quantityyid = "#quantityy"+proid;
+
+var quantityy =  $(quantityyid).text()
+
+if( parseInt(quantityy) > 1){
+
+$(quantityyid).text(parseInt(quantityy) - 1);
+
+}
+
+
+
+var quantityid = "#quantity"+proid;
+
+var quantity =  $(quantityid).text()
+
+if(parseInt(quantity)>1){
+
+$(quantityid).text(parseInt(quantity) - 1);
+
+var subtotalid = "#subtotal"+proid;
+
+var subtotal =  $(subtotalid).text()
+
+$(subtotalid).text(parseInt(subtotal) - parseInt(price));
+
+
+}
+
+
+
+
+
+
+
+
+}
+
+
+
+
+      </script>
+
+
+      <%- include('footer'); -%>
+
+
+
+
+
+   
