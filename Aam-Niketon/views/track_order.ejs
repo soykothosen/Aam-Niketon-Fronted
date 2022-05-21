@@ -1,0 +1,186 @@
+<%- include('header', {userId:userId, login_status: login_status}); -%>
+
+
+
+<div class="row d-flex justify-content-center p-2">
+
+  <div class="col-lg-5 p-2 my-3">
+
+      <div class="container p-5 pb-4 rounded-3 bg-white shadow-sm">
+
+
+
+          <div class="row">
+
+
+              <form action="/track_order/" method="POST">
+
+              <div class="col-12">
+
+                  <div class="mb-3">
+
+                      <div class="container p-0">
+
+                          <label for="formGroupExampleInput" class="form-label hind-siliguri">অর্ডার আইডি লিখুন</label>
+
+                      </div>
+                  
+                      
+                    <input type="text" class="form-control border-dark rounded-3" name="orderid" placeholder="XXXXXXX" required>
+
+                    
+
+                  </div>
+
+              </div>
+
+             
+
+
+              
+
+               <div class="row mb-3">
+
+             
+
+           
+
+              <div class="col-lg-6 d-flex  align-self-end">
+
+
+                  <div class="container d-flex justify-content-center ">
+
+                      <!-- <button type="submit" class="btn btn-dark mt-3 px-5 hind-siliguri"> Log In </button> -->
+                  
+
+                  </div>
+
+                  
+                  
+                  
+
+              </div>
+
+          </form>
+
+              <div class="col-lg-6 d-flex align-self-end">
+
+
+                  <div class="container d-flex justify-content-center ">
+
+                      <button type="submit" class="btn btn-dark mt-3 hind-siliguri"> Check Update</button>
+
+                  </div>
+
+                  
+                  
+                  
+
+              </div>
+
+
+               </div> 
+
+              </form>
+
+
+
+
+
+            </div>
+
+      </div>
+
+  </div>
+
+
+<div class="row d-flex my-5 justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="container text-center">
+
+
+        <%  if ( order_details.length>0 ) { %>
+
+          
+          <% if( order_details != "empty"){ %>
+
+            <div class="hind-siliguri bg-warning text-dark py-1"> <%= order_details[0].status %> </div>
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Products</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Sub total</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                 
+
+                    <% var allproducts = JSON.parse(order_details[0].order_details) %>
+
+                   <% for( var i = 0 ; i< allproducts.length ; i++ ){ %>
+
+                    <tr>
+                        <th scope="row" class="baloo-da-2"><%= i + 1 %></th>
+                        <td class="baloo-da-2" ><%= allproducts[i].product_name %></td>
+                        <td class="baloo-da-2"><%= allproducts[i].quantity %> <i class="bi bi-x"></i> <%= allproducts[i].price %></td>
+                        <td class="baloo-da-2"><%= allproducts[i].quantity * allproducts[i].price %></td>
+                      </tr>
+                      
+
+                   <% } %>
+
+
+                   <tr>
+                    <th scope="row"></th>
+                    <td class="baloo-da-2" ></td>
+                    <th class="baloo-da-2"> Total Price </th>
+                    <th class="baloo-da-2"><%= order_details[0].total_price %></th>
+                  </tr>
+
+                  
+                
+                </tbody>
+              </table>
+
+              <div class="row">
+
+                <div class="col-6">
+
+                </div>
+
+                <div class="col-6 text-center">
+
+                   
+
+                    <!-- <button id="bKash_button" class="btn btn-warning" disabled="disabled">Pay With bKash</button> -->
+
+                </div>
+
+              </div>
+
+         <% } %>
+
+
+          <% } else{ %>
+
+            <div class="fs-5 text-danger">No Order exits with this order id. Please Enter Correct order it</div>
+
+            <% } %>
+
+          
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<%- include('footer'); -%>

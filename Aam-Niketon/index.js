@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var mysql = require("mysql");
 var localStorage = require('localStorage');
 const multer  = require('multer');
+const { NULL } = require('mysql/lib/protocol/constants/types');
 //const path = require('path')
 
 
@@ -59,12 +60,15 @@ var Logincheck = (req, res, next ) => {
 	
 				//console.log(req.products);
 
-				db.query("SELECT * FROM `category`", function(error1,result1){
+				db.query("SELECT * FROM `category`; SELECT * FROM `precessing`", function(error1,result1){
 					if(!error1){
 			
-						req.category = result1;
+						req.category = result1[0];
+						req.process = result1[1];
 			
 						//console.log(req.category)
+
+						
 
 						myResolve();
 
@@ -104,7 +108,27 @@ var Logincheck = (req, res, next ) => {
 	
 }
 
+
+
 app.use(Logincheck);
+
+var AdminLogincheck = (req, res, next ) => {
+
+	var admin_id = localStorage.getItem("admin_id")
+
+	if(admin_id == null ){
+		req.admin_login_status = false;
+	} else{
+
+		req.admin_login_status = true;
+
+	}
+
+	next();
+
+}
+
+app.use(AdminLogincheck);
 
 
 var message, login_status = false;
@@ -115,78 +139,8 @@ app.get("/",function(req,res){
 
 }) 
 
-app.post("/add_category", function(req,res){
-
-    var { category_name }  = req.body;
-
-    console.log(category_name);
-
-    db.query("INSERT INTO `category` (`id`, `category_name`) VALUES (NULL, ?);",[category_name], function(error,result){
-        if(!error){
-            res.send("Add Category Successfully");
-        } else{
-            res.send(error);
-        }
-    })
-
-})
 
 
-app.post("/add_product",function(req,res){
-
-
-    const storage = multer.diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, 'public/img/productImage')
-        },
-        filename: function (req, file, cb) {
-          cb(null, file.originalname)
-        }
-    
-      }); 
-
-      const upload = multer({ storage: storage }).single('product_image');
-
-      upload(req, res, function (err) {
-        if (err instanceof multer.MulterError) {
-          // A Multer error occurred when uploading.
-
-          res.send(err);
-
-        } else if (err) {
-          // An unknown error occurred when uploading.
-
-          res.send(err);
-
-        }
-
-  
-
-        var { product_name, main_price, discount, short_des, category_id, sub_category_id, feature } = req.body
-    
-
-    var pic_url = "http://localhost:8081/img/productImage/"+req.file.filename
-
-
-    var query = "INSERT INTO `products` (`id`, `product_name`, `product_image_url`, `main_price`, `discount`, `short_des`, `category_id`, `sub_category_id`, `feature`) VALUES (NULL, ?, ?, ?, ?, ?, ?, NULL, ?);"
-
-    db.query(query,[product_name,pic_url,main_price,discount,short_des,category_id,feature],function(error,result){
-
-        if(!error){
-
-            res.send("Product Add Successfully")
-
-        } else{
-            res.send(error)
-        }
-
-    })
-
-
-})// multer end
-
-
-})
 
 
 app.get("/login",function(req,res){
@@ -281,7 +235,7 @@ app.post('/create/account',function(req,res){
 
 										
 	
-										var sql1 = "CREATE TABLE `codefjhu_aamniketon`.`?` ( `id` INT NOT NULL AUTO_INCREMENT , `product_id` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; CREATE TABLE `codefjhu_aamniketon`.`?` ( `id` INT NOT NULL AUTO_INCREMENT , `order_details` VARCHAR(500) NOT NULL , `total_price` INT NOT NULL , `status` VARCHAR(100) NOT NULL , `note` VARCHAR(500) NOT NULL , `all_order_id` INT NOT NULL , `promo_code` VARCHAR(50) NOT NULL , `final_price` INT NOT NULL , `date` VARCHAR(50) NOT NULL , `time` VARCHAR(50) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB;"
+										var sql1 = "CREATE TABLE `codefjhu_aamniketon`.`?` ( `id` INT NOT NULL AUTO_INCREMENT , `product_id` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB; CREATE TABLE `codefjhu_aamniketon`.`?` ( `id` INT NOT NULL AUTO_INCREMENT , `order_details` VARCHAR(500) NOT NULL , `total_price` INT NOT NULL , `status` VARCHAR(100) NOT NULL , `note` VARCHAR(500) NOT NULL , `all_order_id` INT NOT NULL , `date` VARCHAR(50) NOT NULL, PRIMARY KEY (`id`)) ENGINE = InnoDB;"
 	
 
 										db.query(sql1,[tablename1,tablename2],function(error3,result3){
@@ -448,7 +402,7 @@ app.post('/login/check',function(req,res){
 						console.log("User Id is "+id);
 						login_status = true;
 
-						res.redirect('/profile');
+						res.redirect('/');
 
 					} else{
 
@@ -537,8 +491,32 @@ app.post('/updatepass',function(req,res){
 });
 
 
-app.get("/profile",function(req,res){
-	res.send("profile page");
+app.get("/profile/:id",function(req,res){
+
+	var { id } = req.params;
+
+	db.query("SELECT * FROM `customers` WHERE user_id = ?;",[id],function(error,result){
+		if(!error){
+
+			db.query("SELECT * FROM `all_order` WHERE cus_id = ? ORDER BY order_id DESC;",[id],function(error1, result1){
+
+				if(!error1){
+
+					res.render("profile.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, user_info: result, order_info: result1});
+
+
+				} else{
+					res.send(error1)
+				}
+
+			})
+
+		} else{
+			res.send(error);
+		}
+	})
+
+	
 })
 
 
@@ -646,6 +624,724 @@ app.get("/product/:id", function(req,res){
 			
 			res.render("product.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, product: result })
 
+
+		} else{
+			res.send(error)
+		}
+	})
+
+})
+
+
+app.get("/delete_from_cart/:cart_id", function(req,res){
+
+	var { cart_id } = req.params;
+
+	var user_id = localStorage.getItem('user_id')
+
+	var tablename1 = user_id+'_cart';
+
+	db.query("DELETE FROM `?` WHERE id = ?;",[tablename1,cart_id],function(error, result){
+		if(!error){
+
+			res.redirect("/cart");
+
+		} else{
+			res.send(error)
+		}
+	})
+
+})
+
+
+app.post("/create_order", function(req,res){
+
+	var { order_details, total_price, date , order_status } = req.body
+
+	console.log(order_details);
+
+	var cus_id = localStorage.getItem('user_id')
+
+	console.log(cus_id)
+
+db.query("INSERT INTO `all_order` (`order_id`, `order_details`, `total_price`, `status`, `note`, `cus_id`, `date`, `payment_number`, `pay_money`) VALUES (NULL, ?, ?, ?, NULL, ?, ?, NULL, NULL);",[order_details, total_price, order_status, cus_id, date],function(error,result){
+	if(!error){
+
+		res.send("Order create successfully")
+
+	} else{
+		res.send(error)
+	}
+})
+
+})
+
+app.get("/checkout",function(req,res){
+
+	var cus_id = localStorage.getItem('user_id')
+
+	db.query("SELECT * FROM `all_order` WHERE cus_id = ? AND status = 'create order';",[cus_id],function(error,result){
+		if(!error){
+
+			console.log(result);
+
+			res.render("checkout.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, order_details: result});
+
+
+		} else{
+
+		}
+	})
+
+	
+})
+
+
+app.get("/order_details/:order_id", function(req,res){
+
+	var { order_id } = req.params
+
+	db.query("SELECT * FROM `all_order` WHERE order_id = ?;",[order_id] ,function(error,result){
+		if(!error){
+
+			
+			res.render("order_details.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, order_details: result});
+
+
+		} else{
+			res.send(error)
+		}
+	})
+
+
+
+})
+
+
+app.get("/track_orders",function(req,res){
+
+    res.render("track_order.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, order_details: "empty"});
+
+}) 
+
+
+app.post("/track_order/", function(req,res){
+
+	var { orderid } = req.body
+
+	var order_id = parseInt(orderid) - 1112
+
+	console.log(order_id);
+
+	db.query("SELECT * FROM `all_order` WHERE order_id = ?;",[order_id] ,function(error,result){
+		if(!error){
+
+			 console.log(result);
+
+			
+			res.render("track_order.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, order_details: result});
+
+
+		} else{
+			res.send(error)
+		}
+	})
+
+
+
+})
+
+
+app.get("/logout", function(req,res){
+
+	localStorage.removeItem("user_id");
+
+	login_status = false;
+
+  res.redirect("/");
+
+
+
+})
+
+
+app.get("/admin_home", function(req,res){
+
+	if(req.admin_login_status == true){
+
+
+	db.query("SELECT * FROM `all_order` INNER JOIN customers ON all_order.cus_id = customers.user_id WHERE all_order.status = 'create order' ORDER BY all_order.order_id DESC;SELECT * FROM `precessing`", function(error, result){
+
+		if(!error){
+
+			console.log(result)
+
+			res.render("admin-home.ejs",{ order_details: result[0], process: req.process, process_name: "New Order"})
+
+
+		} else{
+			res.send(error)
+		}
+
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+
+})
+
+app.post("/update_order_status/:order_id", function(req,res){
+
+		var { note , process} = req.body
+		var { order_id } = req.params
+
+		console.log( order_id )
+		console.log (  note + process )
+
+		db.query("UPDATE `all_order` SET `status` = ?,  `note` = ? WHERE `all_order`.`order_id` = ?;",[process,note,order_id], function(error, result){
+
+			if(!error){
+
+				res.redirect("/admin_home");
+
+			} else{
+
+			}
+
+		})
+	})
+
+
+
+
+app.get("/process/:name",function(req,res){
+
+	if(req.admin_login_status == true){
+	
+	var { name } = req.params
+	console.log(req.params.name)
+
+	db.query("SELECT * FROM `all_order` INNER JOIN customers ON all_order.cus_id = customers.user_id WHERE all_order.status = ? ORDER BY all_order.order_id DESC;SELECT * FROM `precessing`", [name],function(error, result){
+
+		if(!error){
+
+			//console.log(result)
+
+			res.render("admin-home.ejs",{ order_details: result[0], process: req.process, process_name: name})
+
+
+		} else{
+			res.send(error)
+		}
+
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+})
+
+
+app.get("/category_list", function(req,res){
+
+	if(req.admin_login_status == true){
+
+	db.query("SELECT * FROM `category`",function(error,result){
+
+		
+
+		if(!error){
+
+			res.render("add-category.ejs",{categoy_list: result, process: req.process})
+
+		} else{
+			res.send(error);
+		}
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+})
+
+
+app.post("/add_category", function(req,res){
+
+    var { category_name }  = req.body;
+
+    console.log(category_name);
+
+    db.query("INSERT INTO `category` (`id`, `category_name`) VALUES (NULL, ?);",[category_name], function(error,result){
+        if(!error){
+           res.redirect("/category_list")
+        } else{
+            res.send(error);
+        }
+    })
+
+})
+
+app.get("/edit_category/:cat_id/:category_name", function(req,res){
+
+	if(req.admin_login_status == true){
+
+  var { cat_id, category_name } = req.params
+
+  res.render("edit_category.ejs",{cat_id: cat_id, category_name: category_name, process: req.process})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+})
+
+app.post("/edit_categoy/:cat_id",function(req,res){
+
+	var { cat_id } = req.params
+
+	 var { category_name } = req.body
+
+	 db.query("UPDATE `category` SET `category_name` = ? WHERE `category`.`id` = ?;",[category_name, cat_id], function(error,result){
+		 if(!error){
+
+			res.redirect("/category_list")
+
+		 } else{
+			 res.send(result)
+		 }
+	 })
+
+
+})
+
+app.get("/delete_category/:cat_id", function(req,res){
+
+	if(req.admin_login_status == true){
+
+	var { cat_id } = req.params
+
+	db.query("DELETE FROM `category` WHERE `category`.`id` = ?; DELETE FROM `products` WHERE `products`.`category_id` = ?;", [cat_id, cat_id],function(error,result){
+
+		if(!error){
+
+			res.redirect("/category_list")
+
+		} else{
+			res.send(error)
+		}
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+})
+
+
+app.get("/add_product",function(req,res){
+
+	if(req.admin_login_status == true){
+
+	res.render("add-product.ejs",{message: message,category: req.category, process: req.process})
+	message = null;
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+})
+
+
+app.post("/add_product",function(req,res){
+
+
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, 'public/img/productImage')
+        },
+        filename: function (req, file, cb) {
+          cb(null, file.originalname)
+        }
+    
+      }); 
+
+      const upload = multer({ storage: storage }).single('product_image');
+
+      upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+
+          res.send(err);
+
+        } else if (err) {
+          // An unknown error occurred when uploading.
+
+          res.send(err);
+
+        }
+
+  
+
+        var { product_name, main_price, discount, short_des, category_id, sub_category_id, feature } = req.body
+    
+
+    var pic_url = "http://localhost:8081/img/productImage/"+req.file.filename
+
+
+    var query = "INSERT INTO `products` (`id`, `product_name`, `product_image_url`, `main_price`, `discount`, `short_des`, `category_id`, `sub_category_id`, `feature`) VALUES (NULL, ?, ?, ?, ?, ?, ?, NULL, ?);"
+
+    db.query(query,[product_name,pic_url,main_price,discount,short_des,category_id,feature],function(error,result){
+
+        if(!error){
+
+            message = "Product Add Successfully";
+			res.redirect("/add_product")
+
+        } else{
+            res.send(error)
+        }
+
+    })
+
+
+})// multer end
+
+
+})
+
+
+app.get("/all_products",function(req,res){
+
+	if(req.admin_login_status == true){
+
+	db.query("SELECT products.id , products.product_name, products.main_price, products.discount, category.category_name FROM `products` INNER JOIN category ON products.category_id = category.id;",function(error,result){
+		if(!error){
+			res.render("all_product_list.ejs",{product_list: result, process: req.process, category: req.category,})
+		} else{
+			res.send(error)
+		}
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+})
+
+
+app.get("/all_products/:cat_id",function(req,res){
+
+	if(req.admin_login_status == true){
+
+	var { cat_id } = req.params
+
+	db.query("SELECT products.id , products.product_name, products.main_price, products.discount, category.category_name FROM `products` INNER JOIN category ON products.category_id = category.id WHERE category_id = ?;",[cat_id],function(error,result){
+		if(!error){
+			res.render("all_product_list.ejs",{product_list: result, process: req.process, category: req.category,})
+		} else{
+			res.send(error)
+		}
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+})
+
+
+app.get("/delete_product/:pro_id",function(req,res){
+
+	if(req.admin_login_status == true){
+	
+	var { pro_id } = req.params
+
+	db.query("DELETE FROM `products` WHERE `products`.`id` = ?;", [pro_id] ,function(error,result){
+		if(!error){
+
+			res.redirect("/all_products")
+
+		} else{
+			res.send(error)
+		}
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+})
+
+app.get("/edit_product/:pro_id",function(req,res){
+
+	if(req.admin_login_status == true){
+
+	var { pro_id } = req.params
+
+	db.query("SELECT * FROM `products` WHERE id = ?;", [pro_id],function(error,result){
+		if(!error){
+
+			res.render("edit-product.ejs",{message: message,category: req.category, process: req.process, product_info: result, pro_id: pro_id})
+
+			message = null;
+		} else{
+			res.send(error)
+		}
+	})
+
+} else {
+
+	res.redirect("/aam-niketon/adminpanel")
+
+}
+
+
+	
+	
+})
+
+
+app.post("/update_product/:pro_id",function(req,res){
+
+
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+          cb(null, 'public/img/productImage')
+        },
+        filename: function (req, file, cb) {
+          cb(null, file.originalname)
+        }
+    
+      }); 
+
+      const upload = multer({ storage: storage }).single('product_image');
+
+      upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+
+          res.send(err);
+
+        } else if (err) {
+          // An unknown error occurred when uploading.
+
+          res.send(err);
+
+        }
+
+  
+
+        var { product_name, main_price, discount, short_des, category_id, sub_category_id, feature } = req.body
+    
+		var { pro_id } = req.params
+
+    var pic_url = "http://localhost:8081/img/productImage/"+req.file.filename
+
+
+    var query = "UPDATE `products` SET product_name = ? , product_image_url = ?, main_price=?, discount = ?, short_des =?, category_id = ?, feature = ? WHERE `products`.`id` = ?;"
+
+    db.query(query,[product_name,pic_url,main_price,discount,short_des,category_id,feature,pro_id],function(error,result){
+
+        if(!error){
+
+            //message = "Product Update Successfully";
+			res.redirect("/all_products")
+
+        } else{
+            res.send(error)
+        }
+
+    })
+
+
+})// multer end
+
+
+})
+
+
+app.get("/edit_profile",function(req,res){
+
+	var user_id = localStorage.getItem('user_id');
+
+	db.query("SELECT * FROM `customers` WHERE user_id = ?;",[user_id],function(error,result){
+		if(!error){
+
+			
+			res.render("edit-profile.ejs",{message:message,login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, user_info: result})
+			message = null;
+
+		} else{
+			res.send(error)
+		}
+	})
+
+
+})
+
+
+app.post('/edit_profile/:profile_id',function(req,res){
+
+	
+	
+	const storage = multer.diskStorage({
+		destination: function (req, file, cb) {
+		  cb(null, 'public/img/cusImage')
+		},
+		filename: function (req, file, cb) {
+		  cb(null, file.originalname)
+		}
+	
+	  }); 
+
+
+	  const upload = multer({ storage: storage }).single('profile_image');
+
+	  upload(req, res, function (err) {
+		if (err instanceof multer.MulterError) {
+		  // A Multer error occurred when uploading.
+
+		  res.send(err);
+
+		} else if (err) {
+		  // An unknown error occurred when uploading.
+
+		  res.send(err);
+
+		}
+
+
+  
+var name = req.body.cus_name;
+var mobile = req.body.mobilenum;
+var password = req.body.password;
+var email_address = req.body.email_address;
+var gender = req.body.gender;
+var dateofbirth = req.body.birthday;
+var presentaddress = req.body.presentaddress;
+
+var { profile_id } = req.params
+
+	
+
+
+
+	if(req.file == null){
+
+		
+
+
+		db.query("UPDATE `customers` SET `name` = ?, gender = ?, email_address = ?, date_of_birth = ?, shipping_address = ? WHERE `customers`.`user_id` = ?;",[name, gender,email_address,dateofbirth,presentaddress,profile_id],function(error1,result1){
+
+			if(!error1){
+
+
+			
+			res.redirect("/profile/"+profile_id)
+
+
+			} else{
+
+				res.send(error1)
+
+			}
+		})
+
+
+	} else{
+
+		console.log("hello")
+
+
+		var pic_url = "http://localhost:8081/img/cusImage/"+req.file.filename
+
+		console.log(pic_url);
+
+		db.query("UPDATE `customers` SET `name` = ?, pic_url = ?, gender = ?, email_address = ?, date_of_birth = ?, shipping_address = ? WHERE `customers`.`user_id` = ?;",[name, pic_url, gender,email_address,dateofbirth,presentaddress,profile_id],function(error1,result1){
+
+			if(!error1){
+
+
+				res.redirect("/profile/"+profile_id)
+
+
+			} else{
+
+				res.send(error1)
+
+			}
+		})
+
+
+
+
+	}
+
+
+
+
+	
+
+})
+
+
+
+
+
+
+});
+
+app.get("/aam-niketon/adminpanel",function(req,res){
+
+	res.render("admin-login.ejs",{message:message})
+	message = null
+})
+
+app.post("/admin_login/check", function(req,res){
+
+	var { mobilenum , password } = req.body
+	
+	db.query("SELECT * FROM `admin_info` WHERE mobile_num = ? AND password=?;",[mobilenum,password],function(error, result){
+		if(!error){
+
+			if(result.length>0){
+
+			localStorage.setItem("admin_id", result[0].id);
+
+			res.redirect("/admin_home")
+		} else{
+			message = "Please enter Valid Information"
+			res.redirect("/aam-niketon/adminpanel")
+
+		}
 
 		} else{
 			res.send(error)

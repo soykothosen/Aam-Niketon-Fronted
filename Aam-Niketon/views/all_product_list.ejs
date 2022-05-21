@@ -1,0 +1,82 @@
+<%- include('admin-header',{process:process}); -%>
+
+
+<div class="row d-flex my-5 justify-content-center">
+
+    <div class="col-lg-6">
+
+      <div class="container my-3 text-end">
+
+        <div class="dropdown">
+          <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            See by Category
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+
+            <% for(var i = 0; i< category.length ; i++){ %>
+
+              <li><a class="dropdown-item" href="/all_products/<%= category[i].id %>"><%= category[i].category_name %></a></li>
+
+            <% } %>
+
+          </ul>
+        </div>
+
+
+      </div>
+
+        <div class="container text-center">
+
+
+
+
+        
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Discount</th>
+            <th scope="col">Category</th>
+            <th scope="col">#</th>
+            <th scope="col">#</th>
+          </tr>
+        </thead>
+        <tbody>
+         
+
+           <% for( var i = 0 ; i< product_list.length ; i++ ){ %>
+
+            <tr>
+                <td class="baloo-da-2" ><%= i + 1 %></td>
+                <td class="baloo-da-2" > <%= product_list[i].product_name %> </td>
+                <td class="baloo-da-2" > <%= product_list[i].main_price %> </td>
+                <td class="baloo-da-2" > <%= product_list[i].discount %> % </td>
+                <td class="baloo-da-2" > <%= product_list[i].category_name %> </td>
+                <td class="baloo-da-2" ><a href="/edit_product/<%= product_list[i].id  %>" class="btn btn-dark"> Edit</a></td>
+                <td class="baloo-da-2"><a href="/delete_product/<%= product_list[i].id  %>" class="btn btn-danger">Delete</a></td>
+              </tr>
+    
+
+           <% } %>
+
+          
+
+        </tbody>
+      </table>
+          
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+      
+
+   
+   
+        <%- include('admin-footer'); -%>

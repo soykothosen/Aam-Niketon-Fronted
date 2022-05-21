@@ -1,0 +1,162 @@
+<%- include('header', {userId:userId, login_status: login_status}); -%>
+
+
+
+
+<div class="row d-flex my-5 justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="container">
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Products</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Sub total</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                    <% var Length = order_details.length %>
+
+                    <% var allproducts = JSON.parse(order_details[Length-1].order_details) %>
+
+                   <% for( var i = 0 ; i< allproducts.length ; i++ ){ %>
+
+                    <tr>
+                        <th scope="row" class="baloo-da-2"><%= i + 1 %></th>
+                        <td class="baloo-da-2" ><%= allproducts[i].product_name %></td>
+                        <td class="baloo-da-2"><%= allproducts[i].quantity %> <i class="bi bi-x"></i> <%= allproducts[i].price %></td>
+                        <td class="baloo-da-2"><%= allproducts[i].quantity * allproducts[i].price %></td>
+                      </tr>
+                      
+
+                   <% } %>
+
+
+                   <tr>
+                    <th scope="row"></th>
+                    <td class="baloo-da-2" ></td>
+                    <th class="baloo-da-2"> Total Price </th>
+                    <th class="baloo-da-2"><%= order_details[Length-1].total_price %></th>
+                  </tr>
+
+                  
+                
+                </tbody>
+              </table>
+
+              <div class="row">
+
+                <div class="col-6">
+
+                </div>
+
+                <div class="col-6 text-center">
+
+                   
+
+                    <button id="bKash_button" class="btn btn-warning" disabled="disabled">Pay With bKash</button>
+
+                </div>
+
+              </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+  
+
+let paymentID;
+
+let createCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/create';
+let executeCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/execute';
+
+
+
+
+
+
+
+
+$(document).ready(function () {
+    initBkash();
+});
+
+function initBkash() {
+    bKash.init({
+      paymentMode: 'checkout', // Performs a single checkout.
+      paymentRequest: {"amount": '1.50', "intent": 'sale'},
+
+      createRequest: function (request) {
+        $.ajax({
+          url: createCheckoutUrl,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(request),
+          success: function (data) {
+              
+            if (data && data.paymentID != null) {
+              paymentID = data.paymentID;
+              bKash.create().onSuccess(data);
+            } 
+            else {
+              bKash.create().onError(); // Run clean up code
+              alert(data.errorMessage + " Tag should be 2 digit, Length should be 2 digit, Value should be number of character mention in Length, ex. MI041234 , supported tags are MI, MW, RF");
+            }
+
+          },
+          error: function () {
+            bKash.create().onError(); // Run clean up code
+            alert(data.errorMessage);
+          }
+        });
+      },
+      executeRequestOnAuthorization: function () {
+        $.ajax({
+          url: executeCheckoutUrl,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({"paymentID": paymentID}),
+          success: function (data) {
+
+            if (data && data.paymentID != null) {
+              // On success, perform your desired action
+              alert('[SUCCESS] data : ' + JSON.stringify(data));
+              window.location.href = "http://localhost:8081";
+
+            } else {
+              alert('[ERROR] data : ' + JSON.stringify(data));
+              bKash.execute().onError();//run clean up code
+            }
+
+          },
+          error: function () {
+            alert('An alert has occurred during execute');
+            bKash.execute().onError(); // Run clean up code
+          }
+        });
+      },
+      onClose: function () {
+        alert('User has clicked the close button');
+      }
+    });
+
+    $('#bKash_button').removeAttr('disabled');
+
+}
+
+
+</script>
+
+
+<%- include('footer'); -%>

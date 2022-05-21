@@ -2,6 +2,8 @@
 
 
 
+
+   <div id="cart_product" class="d-none"> <%= JSON.stringify(cart_product) %> </div>
      
 
       <div class="row my-3  ">
@@ -10,84 +12,105 @@
 
              <!-- Large Screen-->
 
-            <div class="container m-3 ">
+            <div class="container m-3 d-none d-sm-block">
 
                 <div class="container mx-5 text-center">
 
-                    <div class="row d-flex justify-content-center align-items-center">
-    
-                        <div class="col-3">
-    
-                
-                            <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Product Name</div>
-    
-                        </div>
-    
-                        <div class="col-3">
+                    
 
-                            <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Quantity</div>
-    
-                        </div>
-    
-                        <div class="col-3">
+                    <% if( cart_product.length == 0) { %>
 
-                            <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Price</div>
-    
-                        </div>
-    
-                        <div class="col-3">
+                        <div class="text-success"> Your Cart is Empty</div>
 
-                           
-                        </div>
+                        <a href="/category" type="button" class="btn btn-dark m-3 baloo-da-2" >See Products</a>
     
-                    </div>
+                    
+    
+                        <%  } else { %>
+
+                            <div class="row d-flex justify-content-center align-items-center">
+    
+                                <div class="col-3">
+            
+                        
+                                    <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Product Name</div>
+            
+                                </div>
+            
+                                <div class="col-3">
+        
+                                    <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Quantity</div>
+            
+                                </div>
+            
+                                <div class="col-3">
+        
+                                    <div class="fs-6 fw-bold baloo-da-2 text-dark my-3">Price</div>
+            
+                                </div>
+            
+                                <div class="col-3">
+        
+                                   
+                                </div>
+            
+                            </div>
 
 
-                   <% for(var i = 0 ; i< cart_product.length ; i++) { %>
+                            <% for(var i = 0 ; i< cart_product.length ; i++) { %>
 
                     
-                    <div class="row d-flex justify-content-center align-items-center">
-    
-                        <div class="col-3">
-    
-                            <img src="<%= cart_product[i].product_image_url %>" class="img-fluid" alt="...">
-                            <div class="fs-6 fw-bold baloo-da-2 text-success my-3"><%= cart_product[i].product_name %></div>
-    
-                        </div>
+                                <div class="row d-flex justify-content-center align-items-center">
+                
+                                    <div class="col-3">
+                
+                                        <img src="<%= cart_product[i].product_image_url %>" class="img-fluid" alt="...">
+                                        <div class="fs-6 fw-bold baloo-da-2 text-success my-3"><%= cart_product[i].product_name %></div>
+                
+                                    </div>
+            
+                                    <% var price = Math.floor(((100 - cart_product[i].discount)/100)*cart_product[i].main_price); %>
+                
+                                    <div class="col-3">
+            
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            <a type="button" onclick="decrease('<%= cart_product[i].id %>', '<%= price %>' )"  class="btn btn-light fw-bold"><i class="bi bi-dash-lg"></i></a>
+                                            <a type="button" id = "quantity<%= cart_product[i].id %>" class="btn btn-success">1</a>
+                                            <a type="button" onclick="increase('<%= cart_product[i].id %>', '<%= price %>' )" class="btn btn-dark fw-bold"><i class="bi bi-plus-lg"></i></a>
+                                          </div>
+                
+                                    </div>
+                
+                                    <div class="col-3">
+            
+                                        
+            
+                            <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
+            
+                            <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> <a type="button" id = "quantityy<%= cart_product[i].id %>" class="btn btn-light">1</a> = <span id = "subtotal<%= cart_product[i].id %>">  <%= price %> </span> </div>
+                
+                                    </div>
+                
+                                    <div class="col-3">
+            
+                                        <a href="/delete_from_cart/<%= cart_product[i].id %>" class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-trash"></i></a>
+                
+                                    </div>
+                
+                                </div>
+            
+                              
+                
+                                <% }  %> 
 
-                        <% var price = Math.floor(((100 - cart_product[i].discount)/100)*cart_product[i].main_price); %>
-    
-                        <div class="col-3">
-
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <a type="button" onclick="decrease('<%= cart_product[i].id %>', '<%= price %>' )"  class="btn btn-light fw-bold"><i class="bi bi-dash-lg"></i></a>
-                                <a type="button" id = "quantity<%= cart_product[i].id %>" class="btn btn-success">1</a>
-                                <a type="button" onclick="increase('<%= cart_product[i].id %>', '<%= price %>' )" class="btn btn-dark fw-bold"><i class="bi bi-plus-lg"></i></a>
-                              </div>
-    
-                        </div>
-    
-                        <div class="col-3">
 
                             
+                        <% } %>
 
-                <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
 
-                <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> <a type="button" id = "quantityy<%= cart_product[i].id %>" class="btn btn-light">1</a> = <span id = "subtotal<%= cart_product[i].id %>">  <%= price %> </span> </div>
-    
-                        </div>
-    
-                        <div class="col-3">
 
-                            <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-trash"></i></div>
-    
-                        </div>
-    
-                    </div>
 
-                  
-    
-                    <% }  %> 
+                   
                 
     
                 </div>
@@ -96,51 +119,66 @@
 
              <!-- In Small Screen -->
 
-             <div class="container d-block d-none p-2 shadow-sm text-center">
+             <div class="container d-block d-sm-none p-2 shadow-sm text-center">
 
-                <% for(var i = 0 ; i< cart_product.length ; i++) { %>
+
+               <% if( cart_product.length == 0) { %>
+
+                    <div class="text-success"> Your Cart is Empty</div>
+
+                    <a href="/category" type="button" class="btn btn-dark m-3 baloo-da-2" >See Products</a>
+
+                
+
+                    <%  } else { %>
+
+                        <% for(var i = 0 ; i< cart_product.length ; i++) { %>
         
                 
-                <img src="<%= cart_product[i].product_image_url %>" class="img-fluid" alt="...">
-                <div class="fs-6 fw-bold baloo-da-2 text-success my-3"><%= cart_product[i].product_name %></div>
-            
-                <% var price = Math.floor(((100 - cart_product[i].discount)/100)*cart_product[i].main_price); %>
-        
-                <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
-        
-        
-                <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> <a type="button" id = "quantityym<%= cart_product[i].id %>" class="btn btn-light">1</a> = <span id = "subtotalm<%= cart_product[i].id %>">  <%= price %> </span> </div>
-        
-            
-        
-                      <div class="container-fluid bg-light p-3 my-2 rounded-3">
-        
-                <div class="row">
-        
-                    <div class="col-lg-4">
-        
-                        <div class="btn-group mb-3" role="group" aria-label="Basic example">
-                            <a type="button" onclick="decrease('<%= cart_product[i].id %>', '<%= price %>' )"  class="btn btn-dark fw-bold"><i class="bi bi-dash-lg"></i></a>
-                            <a type="button" id = "quantitym<%= cart_product[i].id %>" class="btn btn-success">1</a>
-                            <a type="button" onclick="increasem('<%= cart_product[i].id %>', '<%= price %>' )" class="btn btn-dark fw-bold"><i class="bi bi-plus-lg"></i></a>
-                          </div>
-        
-                    </div>
-        
-                    <div class="col-lg-4">
-        
-                        <button type="button" class="btn btn-success mb-3 w-100 fw-bold hind-siliguri">Delete</button>
-        
-                    </div>
-        
-        
-        
-                </div>
-        
-        
-                        </div>
-        
-                        <% }  %> 
+                            <img src="<%= cart_product[i].product_image_url %>" class="img-fluid" alt="...">
+                            <div class="fs-6 fw-bold baloo-da-2 text-success my-3"><%= cart_product[i].product_name %></div>
+                        
+                            <% var price = Math.floor(((100 - cart_product[i].discount)/100)*cart_product[i].main_price); %>
+                    
+                            <a type="button" class="btn btn-warning my-1 fw-bold hind-siliguri">মূল্য - <%= price %>/= BDT</a>
+                    
+                    
+                            <div class="fs-5 fw-bold hind-siliguri my-1 text-dark"><i class="bi bi-x"></i> <a type="button" id = "quantityym<%= cart_product[i].id %>" class="btn btn-light">1</a> = <span id = "subtotalm<%= cart_product[i].id %>">  <%= price %> </span> </div>
+                    
+                        
+                    
+                                  <div class="container-fluid bg-light p-3 my-2 rounded-3">
+                    
+                            <div class="row">
+                    
+                                <div class="col-lg-4">
+                    
+                                    <div class="btn-group mb-3" role="group" aria-label="Basic example">
+                                        <a type="button" onclick="decreasem('<%= cart_product[i].id %>', '<%= price %>' )"  class="btn btn-dark fw-bold"><i class="bi bi-dash-lg"></i></a>
+                                        <a type="button" id = "quantitym<%= cart_product[i].id %>" class="btn btn-success">1</a>
+                                        <a type="button" onclick="increasem('<%= cart_product[i].id %>', '<%= price %>' )" class="btn btn-dark fw-bold"><i class="bi bi-plus-lg"></i></a>
+                                      </div>
+                    
+                                </div>
+                    
+                                <div class="col-lg-4">
+                    
+                                    <a href="/delete_from_cart/<%= cart_product[i].id %>" type="button" class="btn btn-success mb-3 w-100 fw-bold hind-siliguri">Delete</a>
+                    
+                                </div>
+                    
+                    
+                    
+                            </div>
+                    
+                    
+                                    </div>
+                    
+                                    <% }  %> 
+
+                        <% } %>
+
+
         
         
             </div>
@@ -156,12 +194,19 @@
 
 
 
+        <% if( cart_product.length == 0) { %>
+
+           
+
+        
+
+            <%  } else { %>
 
         <div class="col-lg-4">
 
          
             <!-- Large Screen-->
-            <div class="container ">
+            <div class="container d-none d-sm-block ">
 
                
 
@@ -172,12 +217,12 @@
                     <button class="btn btn-success" type="button" id="button-addon2">Apply</button>
                   </div>
 
-                  <button class="btn btn-dark" type="button" id="button-addon2">Checkout</button>
+                  <a onclick="Checkout()" class="btn btn-dark" type="button" id="button-addon2">Checkout</a>
 
             </div>
 
              <!-- Small Screen-->
-             <div class="container text-center d-block d-none ">
+             <div class="container text-center d-block d-sm-none ">
 
                 
 
@@ -189,7 +234,7 @@
                     <button class="btn btn-success" type="button" id="button-addon2">Apply</button>
                   </div>
 
-                  <button class="btn btn-dark" type="button" id="button-addon2">Checkout</button>
+                  <a onclick="Checkoutm()"  class="btn btn-dark" type="button" id="button-addon2">Checkout</a>
 
             </div>
 
@@ -197,7 +242,41 @@
 
         </div>
 
+        
+        <% } %>
+
+
+
       </div>
+
+
+
+       <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title baloo-da-2" id="exampleModalLabel">সম্মানিত গ্রাহক আপনার অর্ডারটি গ্রহণ করা হয়েছে</h5>
+          <button type="button" class="btn-close"  aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+            <div id="cartmessage" class="baloo-da-2 fs-5 fw-bold"> আপনার সর্বমোট বিল হয়েছে 1200/= টাকা</div>
+            
+          
+        </div>
+        <div class="modal-footer">
+
+          <a href="/profile/<%= userId %>"  type="button" class="btn btn-dark baloo-da-2"  >Close</a>
+
+          <a href="https://shop.bkash.com/aam-niketon01916665136/paymentlink/" target="_blank" type="button" class="btn btn-warning baloo-da-2">Pay now</a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+      
 
 
       <script>
@@ -237,6 +316,36 @@
 
 
 
+    function increasem( proid , price ){
+
+
+var quantityymid = "#quantityym"+proid;
+
+var quantityym =  $(quantityymid).text()
+
+$(quantityymid).text(parseInt(quantityym) + 1);
+
+
+
+var quantitymid = "#quantitym"+proid;
+
+var quantitym =  $(quantitymid).text()
+
+$(quantitymid).text(parseInt(quantitym) + 1);
+
+
+var subtotalmid = "#subtotalm"+proid;
+
+var subtotalm =  $(subtotalmid).text()
+
+$(subtotalmid).text(parseInt(quantitym)*parseInt(price) + parseInt(price));
+
+
+
+}
+
+
+
 
      function decrease( proid , price ){
 
@@ -272,12 +381,218 @@ $(subtotalid).text(parseInt(subtotal) - parseInt(price));
 
 
 
+}
 
 
+function decreasem( proid , price ){
+
+
+var quantityymid = "#quantityym"+proid;
+
+var quantityym =  $(quantityymid).text()
+
+if( parseInt(quantityym) > 1){
+
+$(quantityymid).text(parseInt(quantityym) - 1);
+
+}
+
+
+var quantitymid = "#quantitym"+proid;
+
+var quantitym =  $(quantitymid).text()
+
+if(parseInt(quantitym)>1){
+
+$(quantitymid).text(parseInt(quantitym) - 1);
+
+var subtotalmid = "#subtotalm"+proid;
+
+var subtotalm =  $(subtotalmid).text()
+
+$(subtotalmid).text(parseInt(subtotalm) - parseInt(price));
+
+
+}
+
+
+}
+
+
+function Checkout(){
+
+    var order = []
+
+     var cart_product =  $("#cart_product").text()
+     var total_price = 0;
+
+     var cart_product_list = JSON.parse(cart_product);
+
+     console.log(cart_product_list.length);
+
+     for(var i =0 ; i< cart_product_list.length ; i++ ){
+
+        var obj = { }
+        console.log("Product Id "+cart_product_list[i].product_id);
+        
+        obj["product_id"] = cart_product_list[i].product_id;
+        obj["product_name"] = cart_product_list[i].product_name;
+
+        var price = Math.floor(((100 - cart_product_list[i].discount)/100)*cart_product_list[i].main_price);
+
+        console.log("Product Price "+price);
+
+        obj["price"] = price;
+
+        var quantityid = '#quantity'+cart_product_list[i].id;
+
+        var quantity =  $(quantityid).text()
+
+        console.log("Quantity "+ quantity);
+
+        obj["quantity"] = quantity;
+
+        order.push(obj);
+
+        var subtotalid = '#subtotal'+cart_product_list[i].id
+        var subtotal = $(subtotalid).text()
+
+        console.log("Subtotal "+subtotal);
+        total_price = total_price +  parseInt(subtotal)
+
+        console.log("Now total price is "+ total_price);
+
+     }
+
+     console.log(order[0])
+
+
+     var date = new Date();
+
+     console.log(date)
+
+
+     $.post("http://localhost:8081/create_order",
+              
+               {
+                order_details: JSON.stringify(order) , 
+                total_price: total_price, 
+                date:  date,
+                order_status: "create order"
+
+               },
+
+               function(data, status){
+
+               console.log(date);
+
+               if(data == "Order create successfully"){
+
+                $("#cartmessage").text("আপনার সর্বমোট বিল হয়েছে "+ total_price +"/= টাকা");
+
+               $('#staticBackdrop').modal('show');
+
+               console.log("Done")
+
+               }
+
+
+               
+   
+              });
 
 
 
 }
+
+function Checkoutm(){
+
+var order = []
+
+ var cart_product =  $("#cart_product").text()
+ var total_price = 0;
+
+ var cart_product_list = JSON.parse(cart_product);
+
+ console.log(cart_product_list.length);
+
+ for(var i =0 ; i< cart_product_list.length ; i++ ){
+
+    var obj = { }
+    console.log("Product Id "+cart_product_list[i].product_id);
+    
+    obj["product_id"] = cart_product_list[i].product_id;
+
+    obj["product_name"] = cart_product_list[i].product_name;
+
+    var price = Math.floor(((100 - cart_product_list[i].discount)/100)*cart_product_list[i].main_price);
+
+    console.log("Product Price "+price);
+
+    obj["price"] = price;
+
+    var quantityid = '#quantitym'+cart_product_list[i].id;
+
+    var quantity =  $(quantityid).text()
+
+    console.log("Quantity "+ quantity);
+
+    obj["quantity"] = quantity;
+
+    order.push(obj);
+
+    var subtotalid = '#subtotalm'+cart_product_list[i].id
+    var subtotal = $(subtotalid).text()
+
+    console.log("Subtotal "+subtotal);
+    total_price = total_price +  parseInt(subtotal)
+
+    console.log("Now total price is "+ total_price);
+
+ }
+
+ console.log(order[0])
+
+
+ var date = new Date();
+
+ console.log(date)
+
+
+ $.post("http://localhost:8081/create_order",
+          
+           {
+            order_details: JSON.stringify(order) , 
+            total_price: total_price, 
+            date:  date,
+            order_status: "create order"
+
+           },
+
+           function(data, status){
+
+           console.log(date);
+
+           if(data == "Order create successfully"){
+
+            $("#cartmessage").text("আপনার সর্বমোট বিল হয়েছে "+ total_price +"/= টাকা");
+
+           $('#staticBackdrop').modal('show');
+
+           console.log("Done")
+
+           }
+
+
+           
+
+          });
+
+
+
+}
+
+
 
 
 

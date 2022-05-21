@@ -1,0 +1,53 @@
+  <!-- Modal -->
+  <div class="modal fade" id = "myModal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title baloo-da-2" id="exampleModalLabel">পণ্য টি কার্টে যুক্ত হয়েছে</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark baloo-da-2" data-bs-dismiss="modal">আরও পণ্য কার্টে যুক্ত করুন</button>
+          <a href="/cart" type="button" class="btn btn-warning baloo-da-2">Go to Cart</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <script>
+
+
+
+        function addtoCart (  product_id ){
+
+            console.log( product_id );
+
+            $.post("http://localhost:8081/addtocart",
+              {
+        
+               product_id: product_id
+    
+               },
+
+               function(data, status){
+
+               console.log(data);
+
+               if(data == "add to cart"){
+
+                $('#myModal').modal('show');
+
+               }
+
+
+               
+   
+              });
+
+       }
+
+
+      </script>

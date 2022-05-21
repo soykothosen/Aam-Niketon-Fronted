@@ -1,0 +1,96 @@
+<%- include('admin-header'); -%>
+
+
+<div class="row d-flex justify-content-center p-2">
+
+    <div class="col-lg-5 p-2 my-3">
+  
+        <div class="container p-5 pb-4 rounded-3 bg-white shadow-sm">
+  
+  
+  
+            <div class="row">
+  
+  
+                <form action="/edit_categoy/<%= cat_id %>" method="POST">
+  
+                <div class="col-12">
+  
+                    <div class="mb-3">
+  
+                        <div class="container p-0">
+  
+                            <label for="formGroupExampleInput" class="form-label hind-siliguri">ক্যাটেগরির নাম লিখুন</label>
+  
+                        </div>
+                    
+                        
+                      <input type="text" class="form-control border-dark rounded-3" name="category_name" value="<%= category_name %>" placeholder="XXXXXXX" required>
+  
+                      
+  
+                    </div>
+  
+                </div>
+  
+               
+  
+  
+                
+  
+                 <div class="row mb-3">
+  
+               
+  
+             
+  
+                <div class="col-lg-6 d-flex  align-self-end">
+  
+  
+                    <div class="container d-flex justify-content-center ">
+  
+                        <!-- <button type="submit" class="btn btn-dark mt-3 px-5 hind-siliguri"> Log In </button> -->
+                    
+  
+                    </div>
+  
+                    
+                    
+                    
+  
+                </div>
+  
+            </form>
+  
+                <div class="col-lg-6 d-flex align-self-end">
+  
+  
+                    <div class="container d-flex justify-content-center ">
+  
+                        <button type="submit" class="btn btn-dark mt-3 hind-siliguri">Done</button>
+  
+                    </div>
+  
+                    
+                    
+                    
+  
+                </div>
+  
+  
+                 </div> 
+  
+                </form>
+  
+  
+  
+  
+  
+              </div>
+  
+        </div>
+  
+    </div>
+
+
+    <%- include('admin-footer'); -%>

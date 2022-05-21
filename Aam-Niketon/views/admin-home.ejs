@@ -1,0 +1,173 @@
+
+   
+    <%- include('admin-header',{process:process}); -%>
+
+      <div class="row d-flex my-5 justify-content-center">
+
+        <div class="col-lg-6">
+
+            <div class="fs-6 text-center fw-bold text-success"><%= process_name %> List </div>
+
+            <% for( var j = 0; j< order_details.length ; j++){ %>
+
+                <div class="container text-center shadow-sm p-2 my-3">
+    
+                    <div class="hind-siliguri bg-warning text-dark py-1"> Order Id <%= order_details[j].order_id + 1112 %> </div>
+          
+                      <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">Products</th>
+                              <th scope="col">Quantity</th>
+                              <th scope="col">Sub total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+          
+                           
+          
+                              <% var allproducts = JSON.parse(order_details[j].order_details) %>
+          
+                             <% for( var i = 0 ; i< allproducts.length ; i++ ){ %>
+          
+                              <tr>
+                                  <th scope="row" class="baloo-da-2"><%= i + 1 %></th>
+                                  <td class="baloo-da-2" ><%= allproducts[i].product_name %></td>
+                                  <td class="baloo-da-2"><%= allproducts[i].quantity %> <i class="bi bi-x"></i> <%= allproducts[i].price %></td>
+                                  <td class="baloo-da-2"><%= allproducts[i].quantity * allproducts[i].price %></td>
+                                </tr>
+                                
+          
+                             <% } %>
+          
+          
+                             <tr>
+                              <th scope="row"></th>
+                              <td class="baloo-da-2" ></td>
+                              <th class="baloo-da-2"> Total Price </th>
+                              <th class="baloo-da-2"><%= order_details[j].total_price %></th>
+                            </tr>
+          
+                            
+                          
+                          </tbody>
+                        </table>
+          
+                        <div class="fw-bold fs-6 text-success baloo-da-2"><u>Customer Info</u></div>
+
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mobile No.</th>
+                                <th scope="col">Payment Number</th>
+                                <th scope="col">Delivery Address</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><%= order_details[j].name %></td>
+                                <td><%= order_details[j].mobile_num %></td>
+                                <td><%= order_details[j].payment_number %></td>
+                                <td class="baloo-da-2"> <%= order_details[j].shipping_address %></td>
+                              </tr>
+                             
+                            </tbody>
+                          </table>
+
+                          <form action="/update_order_status/<%= order_details[j].order_id %>" method="POST" >
+
+                          <div class="col-lg-12">
+
+                            <div class="mb-3">
+          
+                                <div class="container  p-0">
+          
+                                    <label for="formGroupExampleInput" class="form-label hind-siliguri">Write note to customer</label>
+          
+                                </div>
+                            
+                                
+          
+                              <textarea class="form-control border-dark rounded-3"  name="note" id="exampleFormControlTextarea1" rows="2"> <%= order_details[j].note %> </textarea>
+          
+                            </div>
+          
+                        </div>
+
+
+
+                        <div class="row">
+
+                                                  
+                    <div class="col-lg-6">
+
+                        <div class="mb-3">
+  
+                            <div class="container  p-0">
+  
+                                <label for="formGroupExampleInput" class="form-label hind-siliguri">Update Status</label>
+  
+                            </div>
+                        
+                            
+                            <select class="form-select border-dark rounded-3 hind-siliguri" name="process" aria-label="Default select example" required>
+                                <!-- <option selected>Gender সিলেক্ট করুন</option> -->
+
+                                <% for(var k=0; k< process.length ; k++){ %>
+
+                                    <option value="<%= process[k].process_name %>"><%= process[k].process_name %></option>
+
+                                    <%  }  %> 
+                                
+                                
+                              
+                              </select>
+  
+                        </div>
+
+                      
+  
+                    </div>
+
+                    <div class="col-lg-3 d-flex align-items-end ">
+
+                        <div class="container my-3 text-center">
+
+                            <button type="button" class="btn btn-danger hind-siliguri"> Delete</button>
+                  
+                  
+                            </div>
+
+                    </div>
+
+                    <div class="col-lg-3 d-flex align-items-end">
+
+                        <div class="container my-3 text-center ">
+
+                            <button type="submit" class="btn btn-dark hind-siliguri w-50"> Done</button>
+                  
+                          </div>
+                  
+
+                    </div>
+          
+
+                        </div>
+
+                    </form>
+  
+                  </div>
+
+           <% } %> 
+    
+            
+    
+        </div>
+    
+    </div>
+    
+
+   
+    <%- include('admin-footer'); -%>

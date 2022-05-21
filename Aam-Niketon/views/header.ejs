@@ -9,6 +9,9 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://scripts.sandbox.bka.sh/versions/1.1.0-beta/checkout/bKash-checkout-sandbox.js"></script>
+
     <!-- Bootstrap CSS-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
@@ -30,13 +33,13 @@
 
             <div class="row ">
 
-                <div class="col-lg-6">
+                <div class="col-lg-6 	d-none d-sm-block">
 
                 </div>
 
                 <div class="col-lg-6 d-flex justify-content-center">
 
-                    <div class="text-white text-end baloo-da-2"> Call Us Now on +880 1784286885 |  Rajshahi, Bangladesh</div>
+                    <div class="text-white text-end baloo-da-2"> Call Us Now on 01701-009661</div>
 
 
                 </div>
@@ -60,7 +63,18 @@
               <li><a href="/" class="nav-link px-2 text-white">Home</a></li>
               <li><a href="#" class="nav-link px-2 text-white">Reviews</a></li>
               <li><a href="#" class="nav-link px-2 text-white">Contact Us</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">Track Order</a></li>
+
+            <%  if(login_status == true) { %>
+
+              <li><a href="/track_orders" class="nav-link px-2 text-white">Track Order</a></li>
+
+              <%   } else{ %>
+
+                <li><a href="/login" class="nav-link px-2 text-white">Track Order</a></li>
+
+                <%   } %>
+
+             
 
               <!-- Example single danger button -->
 <div class="btn-group">
@@ -112,7 +126,7 @@
                 
                  <% if(login_status == true ){ %>
 
-                  <a type="button" href="#" class="btn btn-outline-light me-2">Log out</a>
+                  <a type="button" href="/logout" class="btn btn-outline-light me-2">Log out</a>
                   <a type="button" href="/profile/<%= userId %>" class="btn btn-warning">Profile</a>
 
                   <%  } else{ %>

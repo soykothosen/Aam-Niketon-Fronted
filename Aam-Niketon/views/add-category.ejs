@@ -1,0 +1,147 @@
+<%- include('admin-header',{process:process}); -%>
+
+
+<div class="row d-flex my-5 justify-content-center">
+
+    <div class="col-lg-6">
+
+        <div class="container text-center">
+
+
+        
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">#</th>
+            <th scope="col">#</th>
+          </tr>
+        </thead>
+        <tbody>
+         
+
+           <% for( var i = 0 ; i< categoy_list.length ; i++ ){ %>
+
+            <tr>
+                <td class="baloo-da-2" ><%= i + 1 %></td>
+                <td class="baloo-da-2" > <%= categoy_list[i].category_name %> </td>
+                <td class="baloo-da-2" ><a href="/edit_category/ <%= categoy_list[i].id %> / <%= categoy_list[i].category_name %> " class="btn btn-dark"><i class="bi bi-pencil-square"></i>  Edit</a></td>
+                <td class="baloo-da-2"><a href="/delete_category/<%= categoy_list[i].id %>" class="btn btn-danger">Delete</a></td>
+              </tr>
+    
+
+           <% } %>
+
+          
+
+        </tbody>
+      </table>
+          
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+      <div class="row d-flex justify-content-center p-2">
+
+        <div class="col-lg-5 p-2 my-3">
+      
+            <div class="container p-5 pb-4 rounded-3 bg-white shadow-sm">
+      
+      
+      
+                <div class="row">
+      
+      
+                    <form action="/add_category" method="POST">
+      
+                    <div class="col-12">
+      
+                        <div class="mb-3">
+      
+                            <div class="container p-0">
+      
+                                <label for="formGroupExampleInput" class="form-label hind-siliguri">ক্যাটেগরির নাম লিখুন</label>
+      
+                            </div>
+                        
+                            
+                          <input type="text" class="form-control border-dark rounded-3" name="category_name" placeholder="XXXXXXX" required>
+      
+                          
+      
+                        </div>
+      
+                    </div>
+      
+                   
+      
+      
+                    
+      
+                     <div class="row mb-3">
+      
+                   
+      
+                 
+      
+                    <div class="col-lg-6 d-flex  align-self-end">
+      
+      
+                        <div class="container d-flex justify-content-center ">
+      
+                            <!-- <button type="submit" class="btn btn-dark mt-3 px-5 hind-siliguri"> Log In </button> -->
+                        
+      
+                        </div>
+      
+                        
+                        
+                        
+      
+                    </div>
+      
+                </form>
+      
+                    <div class="col-lg-6 d-flex align-self-end">
+      
+      
+                        <div class="container d-flex justify-content-center ">
+      
+                            <button type="submit" class="btn btn-dark mt-3 hind-siliguri">Add Category</button>
+      
+                        </div>
+      
+                        
+                        
+                        
+      
+                    </div>
+      
+      
+                     </div> 
+      
+                    </form>
+      
+      
+      
+      
+      
+                  </div>
+      
+            </div>
+      
+        </div>
+
+
+      
+
+   
+   
+        <%- include('admin-footer'); -%>

@@ -1,0 +1,206 @@
+<%- include('header', {userId:userId, login_status: login_status}); -%>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    function previewFile(input){
+        var file = $("input[type=file]").get(0).files[0];
+ 
+        if(file){
+            var reader = new FileReader();
+ 
+            reader.onload = function(){
+                $("#previewImg").attr("src", reader.result);
+            }
+ 
+            reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+    <!-- Registration card Start-->
+
+    <form action="/edit_profile/<%= user_info[0].user_id %>" method="POST" enctype="multipart/form-data">
+      
+    <div class="row d-flex justify-content-center p-2 m-3">
+
+
+        <div class="col-lg-6 p-0 m-0">
+
+            <div class="container p-4 pb-4 rounded-3 bg-white shadow">
+
+
+            <div class="container p-2 shadow-sm edit-image rounded-circle d-flex justify-content-center align-items-center">
+
+              <img id="previewImg" src="<%= user_info[0].pic_url %>" class="img-fluid rounded-circle " alt="...">
+
+              
+             
+
+            </div>
+
+            <div class="row d-flex justify-content-center">
+
+              <div class="col-8">
+
+                <div class="container text-center my-3">
+
+            
+                  <!-- <button type="button" class="btn btn-outline-dark hind-siliguri ">ছবি আপলোড</button> -->
+    
+                  <p class="hind-siliguri">Please Upload Square Size Image</p>
+
+                  <div class="input-group mb-3">
+                    <input type="file" class="form-control hind-siliguri" id="inputGroupFile02" type="file" name="profile_image" onchange="previewFile(this);">
+                    <label class="input-group-text hind-siliguri" for="inputGroupFile02">ছবি আপলোড</label>
+                  </div>
+    
+                </div>
+
+              </div>
+
+            </div>
+
+
+           
+            <div class="text-danger text-center my-3"> <%= message %> </div>
+
+            
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+
+                        <div class="mb-3">
+
+                            <div class="container p-0">
+
+                                <label for="formGroupExampleInput" class="form-label hind-siliguri">আপনার নাম লিখুন <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                            </div>
+                        
+                            
+                          <input type="text" class="form-control border-dark rounded-3" name="cus_name" value="<%= user_info[0].name %>" placeholder="" required>
+
+                        </div>
+
+                    </div>
+
+            
+
+                <div class="col-lg-6">
+
+                  <div class="mb-3">
+
+                      <div class="container  p-0">
+
+                          <label for="formGroupExampleInput" class="form-label hind-siliguri">ইমেইল লিখুন (Optional)</label>
+
+                      </div>
+                  
+                      
+                    <input type="text" class="form-control border-dark rounded-3" name = "email_address" value="<%= user_info[0].email_address %>" placeholder="" aria-label="First name">
+
+                  </div>
+
+              </div>
+
+
+
+                    <div class="col-lg-6">
+
+                      <div class="mb-3">
+
+                          <div class="container  p-0">
+
+                              <label for="formGroupExampleInput" class="form-label hind-siliguri">Gender <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                          </div>
+                      
+                          
+                          <select class="form-select border-dark rounded-3 hind-siliguri" name="gender" aria-label="Default select example" required>
+                              <!-- <option selected>Gender সিলেক্ট করুন</option> -->
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                            
+                            </select>
+
+                      </div>
+
+                  </div>
+
+                  <div class="col-lg-6">
+
+                    <div class="mb-3">
+  
+                        <div class="container  p-0">
+  
+                            <label for="formGroupExampleInput" class="form-label hind-siliguri">আপনার জন্মতারিখ (Optional)</label>
+  
+                        </div>
+                    
+                        
+                      <input type="date" class="form-control border-dark rounded-3" name = "birthday" value="<%= user_info[0].date_of_birth %>" placeholder="" aria-label="First name">
+  
+                    </div>
+  
+                </div>
+
+
+
+
+                <div class="col-lg-12">
+
+                  <div class="mb-3">
+
+                      <div class="container  p-0">
+
+                          <label for="formGroupExampleInput" class="form-label hind-siliguri">বর্তমান ঠিকানা লিখুন । যেখানে পণ্য ডেলিভারি নিতে চান <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                      </div>
+                  
+                      
+
+                    <textarea class="form-control border-dark rounded-3" name="presentaddress" id="exampleFormControlTextarea1" rows="3"><%= user_info[0].shipping_address %></textarea>
+
+                  </div>
+
+              </div>
+
+
+
+
+      
+
+
+            
+
+
+
+        <div class="container my-3 text-center">
+
+          <button type="submit" class="btn btn-dark hind-siliguri"> Update Profile </button>
+
+        </div>
+
+
+               
+
+
+
+
+                  </div>
+
+            </div>
+
+        </div>
+
+        
+
+      </div>
+
+    </form>
+
+      <!-- Registration card End-->
+
+      <%- include('footer'); -%>

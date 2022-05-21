@@ -1,0 +1,120 @@
+<%- include('header', {userId:userId, login_status: login_status}); -%>
+
+
+
+
+<div class="row d-flex my-5 justify-content-center">
+
+    <div class="col-lg-6">
+
+        
+
+        <div class="container text-center">
+
+           
+
+            <img src="<%= user_info[0].pic_url %>"  class="img-fluid w-50 rounded-3" alt="...">
+
+            <div class="h4 fw-bold  my-3 baloo-da-2"><%= user_info[0].name %></div>
+
+            <div class="h5  my-1 baloo-da-2"><%= user_info[0].email_address %></div>
+
+            <div class="h5  my-1 baloo-da-2"><%= user_info[0].mobile_num %></div>
+
+            <div class="h5  my-1 baloo-da-2"><%= user_info[0].shipping_address %></div>
+
+
+            <a href="/edit_profile" class="btn btn-success my-3">Edit Profile</a>
+
+            
+
+          
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="container text-center">
+
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Note</th>
+                    <th scope="col">#</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                   <% for (var i = 0; i<order_info.length ; i++ ){ %>
+
+                    <tr>
+                        <td class="baloo-da-2" scope="row"> <%= order_info[i].order_id +1112 %></td>
+                        <td class="baloo-da-2"><%= order_info[i].status %></td>
+                        <td><a onclick="shownote('<%=  order_info[i].note  %>')" type="button" class="btn btn-light">#note</a></td>
+                        <td><a href="/order_details/<%= order_info[i].order_id %>" type="button" class="btn btn-dark">datails</a></td>
+                      </tr>
+
+                    <%   } %>
+ 
+                  
+                  
+                </tbody>
+              </table>
+
+             
+
+        </div>
+
+    </div>
+
+ 
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id = "myModal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title baloo-da-2" id="exampleModalLabel">Note</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+            <div id = "message" class="baloo-da-2">  </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark baloo-da-2" data-bs-dismiss="modal">Close</button>
+          <!-- <a href="/cart" type="button" class="btn btn-warning baloo-da-2">Go to Cart</a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+      <script>
+
+
+
+        function shownote( note ){
+
+            
+
+            $("#message").text(note);
+
+            
+
+            $('#myModal').modal('show');
+
+        }
+
+
+      </script>
+
+
+<%- include('footer'); -%>
