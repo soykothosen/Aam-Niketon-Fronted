@@ -1,0 +1,139 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> <%= order_details[0].order_id + 1112 %>_No_Order_Aam Niketon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+   <!-- Custom CSS-->
+   <link href="../css/custom.css" rel="stylesheet">
+
+   
+    <!-- Bootstrap Icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css">
+
+
+  </head>
+  <body>
+
+
+    <div class="row d-flex justify-content-center">
+
+      <div class="col-lg-6">
+
+
+
+              <div class="container text-center p-2 my-3">
+
+                <img src="/img/website-photo/logo.png" class="img-fluid" alt="...">
+  
+                  <div class="hind-siliguri bg-warning text-dark py-1"> Order ID No <%= order_details[0].order_id + 1112 %> </div>
+        
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Products</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Sub total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+        
+                         
+        
+                            <% var allproducts = JSON.parse(order_details[0].order_details) %>
+        
+                           <% for( var i = 0 ; i< allproducts.length ; i++ ){ %>
+        
+                            <tr>
+                                <th scope="row" class="baloo-da-2"><%= i + 1 %></th>
+                                <td class="baloo-da-2" ><%= allproducts[i].product_name %></td>
+                                <td class="baloo-da-2"><%= allproducts[i].quantity %> <i class="bi bi-x"></i> <%= allproducts[i].price %></td>
+                                <td class="baloo-da-2"><%= allproducts[i].quantity * allproducts[i].price %></td>
+                              </tr>
+                              
+        
+                           <% } %>
+        
+        
+                           <tr>
+                            <th scope="row"></th>
+                            <td class="baloo-da-2" ></td>
+                            <th class="baloo-da-2"> Total Price </th>
+                            <th class="baloo-da-2"><%= order_details[0].total_price %></th>
+                          </tr>
+        
+                          
+                        
+                        </tbody>
+                      </table>
+        
+                      <div class="fw-bold fs-6 text-success baloo-da-2">Customer Info</div>
+
+                      <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Name</th>
+                              <th scope="col">Mobile No.</th>
+                              <th scope="col">Payment Number</th>
+                              <th scope="col">Paid Ammount </th>
+                              <th scope="col">Trans. Id</th>
+                        
+                            </tr>
+                          </thead>
+
+                          <tbody>
+
+                            <tr>
+                              <td><%= order_details[0].name %></td>
+                              <td><%= order_details[0].mobile_num %></td>
+                              <td><%= order_details[0].payment_number %> </td>
+                              <% if(order_details[0].pay_money == null ){ %>
+
+                                <td> 0 Taka</td>
+
+                                <% } else{ %>
+
+                                <td><%= order_details[0].pay_money %> Taka</td>
+
+                                <%  } %>
+                              
+                              <td><%= order_details[0].transaction_id %></td>
+                              
+                            </tr>
+                           
+                          </tbody>
+                        </table>
+
+                        <div class="baloo-da-2 my-2">পণ্য ডেলিভারির ঠিকানাঃ  <b>  <%= order_details[0].shipping_address %> </b></div>
+
+                       
+
+                </div>
+
+            
+                <div class="baloo-da-2 my-2 text-center">আমাদের অন্যান্য পন্য সম্পর্কে জানতে ভিজিট করুনঃ <a href="https://aamniketon.shop/" class="text-decoration-none">https://aamniketon.shop</a> অথবা কল করুনঃ 01701-009661</div>
+
+
+                <div class="text-center text-muted small hind-siliguri mt-5">Powered by: Code Studio Software Company</div>
+                <div class="text-center text-muted small hind-siliguri ">Mobile Apps Development  | Website Development | UI UX Design</div>
+                <div class="text-center text-muted small hind-siliguri ">01784286885   |   01710598673</div>
+
+
+               <div class="container-fluid text-end">
+
+                <a href="" onclick="window.print()" type="button" class="btn btn-light text-muted mt-5 mb-2 hind-siliguri">Print</a>
+
+               </div>
+
+  
+      </div>
+  
+  </div>
+  
+
+ 
+  <%- include('admin-footer'); -%>

@@ -62,6 +62,8 @@
                                 <th scope="col">Name</th>
                                 <th scope="col">Mobile No.</th>
                                 <th scope="col">Payment Number</th>
+                                <th scope="col">Paid Ammount </th>
+                                <th scope="col">Trans. Id</th>
                                 <th scope="col">Delivery Address</th>
                               </tr>
                             </thead>
@@ -69,7 +71,19 @@
                               <tr>
                                 <td><%= order_details[j].name %></td>
                                 <td><%= order_details[j].mobile_num %></td>
-                                <td><%= order_details[j].payment_number %></td>
+                                <td><%= order_details[j].payment_number %> </td>
+
+                                <% if(order_details[j].pay_money == null ){ %>
+
+                                  <td> 0 Taka</td>
+
+                                  <% } else{ %>
+
+                                  <td><%= order_details[j].pay_money %> Taka</td>
+
+                                  <%  } %>
+                                
+                                <td><%= order_details[j].transaction_id %></td>
                                 <td class="baloo-da-2"> <%= order_details[j].shipping_address %></td>
                               </tr>
                              
@@ -135,9 +149,17 @@
 
                         <div class="container my-3 text-center">
 
-                            <button type="button" class="btn btn-danger hind-siliguri"> Delete</button>
+                        <%  if(order_details[j].status == "create order"){  %>
+
+                              
+                          <a href="delete_order/<%= order_details[j].order_id %>" type="button" class="btn btn-danger hind-siliguri"> Delete</a>
                   
+
+                          <%  }   %>
+
+                        
                   
+
                             </div>
 
                     </div>
@@ -152,11 +174,25 @@
                   
 
                     </div>
+
+                    
+        
           
 
                         </div>
 
                     </form>
+
+                   
+
+                      <div class="container my-3 text-center ">
+
+                          <a href="/invoice/<%= order_details[j].order_id %>" target="_blank"  type="button" class="btn btn-success hind-siliguri w-50">Invoice</a>
+                
+                        </div>
+                
+
+                  
   
                   </div>
 

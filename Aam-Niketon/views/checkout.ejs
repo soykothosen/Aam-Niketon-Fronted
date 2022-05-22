@@ -51,15 +51,29 @@
 
               <div class="row">
 
-                <div class="col-6">
+                <div class="col-lg-7 mb-3">
+
+                  <div class="hind-siliguri fs-6">সম্মানিত ক্রেতা, আপনার অর্ডার গ্রহণ করা হয়েছে । Pay With bKash বাটন টিতে ক্লিক করে আপনি টাকা পে করতে পারবেন। </div> <br> <br>
+
+                  <div class="hind-siliguri fs-6"> আপনি চাইলে পরে টাকা পরিশোধ করতে পারবেন। সেক্ষেত্রে প্রোফাইল পেজে গিয়ে টাকা পরিশোধ করা যাবে</div> <br> <br>
+
+
+                  <div class="hind-siliguri fs-6"> এখন টাকা পরিশোধ করতে চাইলে নিচের ফর্মটি পূরণ করুন। আপনার <span class="text-dark bg-warning fw-bold p-1"> এই অর্ডার আইডি হলো <%= order_details[Length-1].order_id + 1112 %>  </span></div>
+
+     
+
+
+
 
                 </div>
 
-                <div class="col-6 text-center">
+                <div class="col-lg-3 text-center">
 
                    
 
-                    <button id="bKash_button" class="btn btn-warning" disabled="disabled">Pay With bKash</button>
+                    <button id="bKash_button" class="btn btn-warning d-none" disabled="disabled">Pay With bKash</button>
+
+                    <a href="https://shop.bkash.com/aam-niketon01916665136/paymentlink/" target="_blank"  class="btn btn-dark"> Pay With bKash </a>
 
                 </div>
 
@@ -71,89 +85,228 @@
 
 </div>
 
+     <!-- Log In card Start-->
+
+     <div class="row d-flex justify-content-center p-2">
+
+      <div class="col-lg-5 p-2 my-1">
+
+          <div class="container p-5 pb-4 rounded-3 bg-white shadow-sm">
+
+              
+
+              <h6 class="fw-bold text-center hind-siliguri my-4"> নিচের তথ্য গুলো দিয়ে অর্ডার কমপ্লিট করুন</h6>
+
+              <div class="row">
+
+
+
+                  <form action="/get_payment/<%= userId %>" method="POST">
+
+                    <div class="col-12">
+
+                      <div class="mb-3">
+
+                          <div class="container p-0">
+
+                              <label for="formGroupExampleInput" class="form-label hind-siliguri">অর্ডার আইডি লিখুন <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                          </div>
+                      
+                          
+                        <input type="text" class="form-control border-dark rounded-3" name="order_id" value="<%= order_details[Length-1].order_id + 1112 %>" placeholder="" required>
+
+                        
+
+                      </div>
+
+                  </div>
+
+                  <div class="col-12">
+
+                      <div class="mb-3">
+
+                          <div class="container p-0">
+
+                              <label for="formGroupExampleInput" class="form-label hind-siliguri">পেমেন্ট মোবাইল নাম্বার লিখুন <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                          </div>
+                      
+                          
+                        <input type="text" class="form-control border-dark rounded-3" name="payment_mobilenum" placeholder="01XXXXXXXXX" required>
+
+                        
+
+                      </div>
+
+                  </div>
+
+                  <div class="col-12">
+
+                    <div class="container p-0">
+
+                        <label for="formGroupExampleInput" class="form-label hind-siliguri">Amount <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                    </div>
+                    
+                  <input type="text" class="form-control border-dark rounded-3" name="pay_money" value="<%= order_details[Length-1].total_price %>" placeholder="XXXXXXX" required>
+                </div>
+
+                  <div class="col-12">
+
+                      <div class="container p-0">
+
+                          <label for="formGroupExampleInput" class="form-label hind-siliguri">Transaction Id <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                      </div>
+                      
+                    <input type="text" class="form-control border-dark rounded-3" name="transaction_id" placeholder="XXXXXXXXX" required>
+                  </div>
+
+
+                   
+
+                   <div class="row mb-3">
+
+                 
+
+               
+
+                  <div class="col-lg-6 d-flex  align-self-end">
+
+
+                      <div class="container d-flex justify-content-center ">
+
+                          <button type="submit" class="btn btn-dark mt-3 px-5 hind-siliguri"> Submit </button>
+                      
+
+                      </div>
+
+                      
+                      
+                      
+
+                  </div>
+
+              </form>
+
+                  <div class="col-lg-5 d-flex align-self-end">
+
+
+                      <div class="container d-flex justify-content-center ">
+
+                          <a href="/profile/<%= userId %>" type="button" class="btn btn-outline-dark mt-3 hind-siliguri">Pay Later</a>
+
+                      </div>
+
+                      
+                      
+                      
+
+                  </div>
+
+
+                   </div> 
+
+                  </form>
+
+
+
+
+
+                </div>
+
+          </div>
+
+      </div>
+
+    </div>
+
+    <!-- Log In card End-->
+
 
 <script>
 
   
 
-let paymentID;
+// let paymentID;
 
-let createCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/create';
-let executeCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/execute';
-
-
+// let createCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/create';
+// let executeCheckoutUrl = 'https://merchantserver.sandbox.bka.sh/api/checkout/v1.2.0-beta/payment/execute';
 
 
 
 
 
 
-$(document).ready(function () {
-    initBkash();
-});
 
-function initBkash() {
-    bKash.init({
-      paymentMode: 'checkout', // Performs a single checkout.
-      paymentRequest: {"amount": '1.50', "intent": 'sale'},
 
-      createRequest: function (request) {
-        $.ajax({
-          url: createCheckoutUrl,
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify(request),
-          success: function (data) {
+// $(document).ready(function () {
+//     initBkash();
+// });
+
+// function initBkash() {
+//     bKash.init({
+//       paymentMode: 'checkout', // Performs a single checkout.
+//       paymentRequest: {"amount": '1.50', "intent": 'sale'},
+
+//       createRequest: function (request) {
+//         $.ajax({
+//           url: createCheckoutUrl,
+//           type: 'POST',
+//           contentType: 'application/json',
+//           data: JSON.stringify(request),
+//           success: function (data) {
               
-            if (data && data.paymentID != null) {
-              paymentID = data.paymentID;
-              bKash.create().onSuccess(data);
-            } 
-            else {
-              bKash.create().onError(); // Run clean up code
-              alert(data.errorMessage + " Tag should be 2 digit, Length should be 2 digit, Value should be number of character mention in Length, ex. MI041234 , supported tags are MI, MW, RF");
-            }
+//             if (data && data.paymentID != null) {
+//               paymentID = data.paymentID;
+//               bKash.create().onSuccess(data);
+//             } 
+//             else {
+//               bKash.create().onError(); // Run clean up code
+//               alert(data.errorMessage + " Tag should be 2 digit, Length should be 2 digit, Value should be number of character mention in Length, ex. MI041234 , supported tags are MI, MW, RF");
+//             }
 
-          },
-          error: function () {
-            bKash.create().onError(); // Run clean up code
-            alert(data.errorMessage);
-          }
-        });
-      },
-      executeRequestOnAuthorization: function () {
-        $.ajax({
-          url: executeCheckoutUrl,
-          type: 'POST',
-          contentType: 'application/json',
-          data: JSON.stringify({"paymentID": paymentID}),
-          success: function (data) {
+//           },
+//           error: function () {
+//             bKash.create().onError(); // Run clean up code
+//             alert(data.errorMessage);
+//           }
+//         });
+//       },
+//       executeRequestOnAuthorization: function () {
+//         $.ajax({
+//           url: executeCheckoutUrl,
+//           type: 'POST',
+//           contentType: 'application/json',
+//           data: JSON.stringify({"paymentID": paymentID}),
+//           success: function (data) {
 
-            if (data && data.paymentID != null) {
-              // On success, perform your desired action
-              alert('[SUCCESS] data : ' + JSON.stringify(data));
-              window.location.href = "http://localhost:8081";
+//             if (data && data.paymentID != null) {
+//               // On success, perform your desired action
+//               alert('[SUCCESS] data : ' + JSON.stringify(data));
+//               window.location.href = "http://localhost:8081";
 
-            } else {
-              alert('[ERROR] data : ' + JSON.stringify(data));
-              bKash.execute().onError();//run clean up code
-            }
+//             } else {
+//               alert('[ERROR] data : ' + JSON.stringify(data));
+//               bKash.execute().onError();//run clean up code
+//             }
 
-          },
-          error: function () {
-            alert('An alert has occurred during execute');
-            bKash.execute().onError(); // Run clean up code
-          }
-        });
-      },
-      onClose: function () {
-        alert('User has clicked the close button');
-      }
-    });
+//           },
+//           error: function () {
+//             alert('An alert has occurred during execute');
+//             bKash.execute().onError(); // Run clean up code
+//           }
+//         });
+//       },
+//       onClose: function () {
+//         alert('User has clicked the close button');
+//       }
+//     });
 
-    $('#bKash_button').removeAttr('disabled');
+//     $('#bKash_button').removeAttr('disabled');
 
-}
+// }
 
 
 </script>

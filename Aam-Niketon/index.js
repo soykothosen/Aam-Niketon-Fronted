@@ -4,8 +4,11 @@ var mysql = require("mysql");
 var localStorage = require('localStorage');
 const multer  = require('multer');
 const { NULL } = require('mysql/lib/protocol/constants/types');
-//const path = require('path')
-
+const session = require("express-session");
+const res = require('express/lib/response');
+const MySQLStore = require("express-mysql-session")(session);
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 
 
@@ -38,9 +41,32 @@ var db = mysql.createConnection({
 });
 
 
+var sessionStore = new MySQLStore({
+    expiration: 10800000,
+    createDatabaseTable: true,
+    schema:{
+        tableName: 'sessiontbl',
+        columnNames:{
+            session_id: 'sesssion_id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
+},db)
+
+app.use( session({
+    key: 'keyin',
+    secret: 'my secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: true
+}))
+
+
 var Logincheck = (req, res, next ) => {
 
-	var id = localStorage.getItem("user_id");
+	//var id = localStorage.getItem("user_id");
+	var id = req.session.user_id
 
 	if(id != null){
 		req.userId = id;
@@ -114,7 +140,9 @@ app.use(Logincheck);
 
 var AdminLogincheck = (req, res, next ) => {
 
-	var admin_id = localStorage.getItem("admin_id")
+	//var admin_id = localStorage.getItem("admin_id")
+
+	var admin_id = req.session.admin_id
 
 	if(admin_id == null ){
 		req.admin_login_status = false;
@@ -395,9 +423,13 @@ app.post('/login/check',function(req,res){
 					if(result[0].password == password){
 
 
-						localStorage.setItem('user_id', result[0].user_id );
+						//localStorage.setItem('user_id', result[0].user_id );
+						req.session.user_id = result[0].user_id;
 
-						var id = localStorage.getItem('user_id');
+						
+
+						//var id = localStorage.getItem('user_id');
+						var id = req.session.user_id
 
 						console.log("User Id is "+id);
 						login_status = true;
@@ -529,7 +561,9 @@ app.get("/category",function(req,res){
 
 app.get("/cart",function(req,res){
 
-	var id = localStorage.getItem("user_id");
+	//var id = localStorage.getItem("user_id");
+
+	var id = req.session.user_id
 
 	var tablename1 = id+'_cart'
 
@@ -565,7 +599,9 @@ app.get("/cart",function(req,res){
 
 app.post("/addtocart",function(req,res){
 
-	var id = localStorage.getItem("user_id");
+	//var id = localStorage.getItem("user_id");
+
+	var id = req.session.user_id
 
 	if(id != null){
 	
@@ -637,7 +673,9 @@ app.get("/delete_from_cart/:cart_id", function(req,res){
 
 	var { cart_id } = req.params;
 
-	var user_id = localStorage.getItem('user_id')
+	//var user_id = localStorage.getItem('user_id')
+
+	var user_id = req.session.user_id;
 
 	var tablename1 = user_id+'_cart';
 
@@ -660,14 +698,20 @@ app.post("/create_order", function(req,res){
 
 	console.log(order_details);
 
-	var cus_id = localStorage.getItem('user_id')
+	//var cus_id = localStorage.getItem('user_id')
+
+	var cus_id = req.session.user_id;
+
+
 
 	console.log(cus_id)
 
 db.query("INSERT INTO `all_order` (`order_id`, `order_details`, `total_price`, `status`, `note`, `cus_id`, `date`, `payment_number`, `pay_money`) VALUES (NULL, ?, ?, ?, NULL, ?, ?, NULL, NULL);",[order_details, total_price, order_status, cus_id, date],function(error,result){
 	if(!error){
 
+
 		res.send("Order create successfully")
+
 
 	} else{
 		res.send(error)
@@ -678,15 +722,34 @@ db.query("INSERT INTO `all_order` (`order_id`, `order_details`, `total_price`, `
 
 app.get("/checkout",function(req,res){
 
-	var cus_id = localStorage.getItem('user_id')
+	//var cus_id = localStorage.getItem('user_id')
+
+	var cus_id = req.session.user_id
+
+	var tablename1 = cus_id+"_cart";
 
 	db.query("SELECT * FROM `all_order` WHERE cus_id = ? AND status = 'create order';",[cus_id],function(error,result){
 		if(!error){
 
-			console.log(result);
+			
+			
 
-			res.render("checkout.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, order_details: result});
 
+			
+		db.query("DELETE FROM `?`",[tablename1],function(error1,result1){
+			if(!error1){
+
+				console.log(result);
+				res.render("checkout.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products, order_details: result});
+
+
+				
+			} else{
+				res.send(error1)
+			}
+		})
+
+			
 
 		} else{
 
@@ -754,11 +817,23 @@ app.post("/track_order/", function(req,res){
 
 app.get("/logout", function(req,res){
 
-	localStorage.removeItem("user_id");
+	//localStorage.removeItem("user_id");
 
-	login_status = false;
+	req.session.destroy(function(err){
+		if(!err){
 
-  res.redirect("/");
+			login_status = false;
+
+			res.redirect("/");
+
+		} else{
+
+			res.send(err);
+
+		}
+	})
+
+
 
 
 
@@ -1190,7 +1265,9 @@ app.post("/update_product/:pro_id",function(req,res){
 
 app.get("/edit_profile",function(req,res){
 
-	var user_id = localStorage.getItem('user_id');
+	//var user_id = localStorage.getItem('user_id');
+
+	var user_id = req.session.user_id;
 
 	db.query("SELECT * FROM `customers` WHERE user_id = ?;",[user_id],function(error,result){
 		if(!error){
@@ -1334,7 +1411,9 @@ app.post("/admin_login/check", function(req,res){
 
 			if(result.length>0){
 
-			localStorage.setItem("admin_id", result[0].id);
+			//localStorage.setItem("admin_id", result[0].id);
+
+			req.session.admin_id = result[0].id;
 
 			res.redirect("/admin_home")
 		} else{
@@ -1351,6 +1430,106 @@ app.post("/admin_login/check", function(req,res){
 })
 
 
+app.post("/get_payment/:user_id", function(req,res){
+
+	var { user_id } = req.params
+
+	var { order_id, payment_mobilenum, pay_money, transaction_id } = req.body
+
+	console.log(payment_mobilenum)
+	console.log(order_id)
+
+	db.query("UPDATE `all_order` SET `payment_number` = ?, `pay_money` = ?, `transaction_id` = ? WHERE `all_order`.`order_id` = ?;", [payment_mobilenum, pay_money, transaction_id, order_id-1112], function(error,result){
+		if(!error){
+
+			console.log(result)
+
+			res.redirect("/profile/"+user_id)
+
+		} else{
+			res.send(error)
+		}
+	})
+
+
+})
+
+
+app.get("/paynow",function(req,res){
+
+    res.render("pay-now.ejs",{login_status: req.login_status, userId: req.userId, category: req.category, products: req.products});
+
+}) 
+
+app.post("/get_payment/", function(req,res){
+
+
+
+	var { order_id, payment_mobilenum, pay_money, transaction_id } = req.body
+
+	console.log(payment_mobilenum)
+	console.log(order_id)
+
+	var user_id = req.session.user_id
+
+	db.query("UPDATE `all_order` SET `payment_number` = ?, `pay_money` = ?, `transaction_id` = ? WHERE `all_order`.`order_id` = ?;", [payment_mobilenum, pay_money, transaction_id, order_id-1112], function(error,result){
+		if(!error){
+
+			console.log(result)
+
+			res.redirect("/profile/"+user_id)
+
+		} else{
+			res.send(error)
+		}
+	})
+
+
+})
+
+app.get("/delete_order/:order_id",function(req,res){
+
+	var { order_id } = req.params
+
+	db.query("DELETE FROM `all_order` WHERE order_id = ?;",[order_id],function(error,result){
+
+		if(!error){
+
+			res.redirect("/admin_home")
+
+		} else{
+			res.send(error)
+		}
+
+	})
+})
+
+
+app.get("/invoice/:order_id",function(req,res){
+
+	var { order_id } = req.params;
+
+	db.query("SELECT * FROM `all_order` INNER JOIN customers ON all_order.cus_id = customers.user_id WHERE order_id = ?;",[order_id],function(error,result){
+
+		if(!error){
+
+			console.log('hello')
+			console.log(result)
+
+			res.render("invoice.ejs",{order_details:result,})
+
+			//res.send("hello")
+
+		} else{
+			res.send(error);
+		}
+
+	})
+
+
+
+
+});
 
 
 app.listen('8081', function(err){

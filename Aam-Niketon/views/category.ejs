@@ -87,8 +87,18 @@
                             <div class="col-5">
     
                                 <div class="container text-end p-0">
+
+                                    <% if( userId != null){ %>
+
+                                        <a type="button" onclick= "addtoCart( '<%= products[j].id %>' )" class="btn btn-dark w-100 fw-bold baloo-da-2">Buy Now </a>
+
+                                   <% } else{ %>
+
+                                    <a type="button" href="/login" class="btn btn-dark w-100 fw-bold baloo-da-2">Buy Now</a>
+
+                                   <% } %>
     
-                                    <button type="button" class="btn btn-dark w-100 fw-bold baloo-da-2">Buy Now</button>
+                                    
     
                                 </div>
     

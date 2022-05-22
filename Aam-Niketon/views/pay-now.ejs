@@ -1,0 +1,162 @@
+<%- include('header', {userId:userId, login_status: login_status}); -%>
+
+
+<div class="row d-flex justify-content-center p-2">
+
+    <div class="col-lg-5 p-2 my-1">
+
+        <div class="container p-5 pb-4 rounded-3 bg-white shadow-sm">
+
+            
+
+            <div class="container">
+
+                <div class="row">
+    
+                  <div class="col-lg-7 mb-2">
+          
+                    <div class="hind-siliguri fs-6 text-justify">সম্মানিত ক্রেতা, Pay With Bkash বাটন টিতে ক্লিক করে আপনি টাকা পে করতে পারবেন। টাকা পে করে নিচের ফর্ম টি পূরণ করবেন </div> <br> <br>
+      
+          
+                  </div>
+          
+                  <div class="col-lg-5 mb-5 text-center">
+          
+                     
+          
+                      <button id="bKash_button" class="btn btn-warning d-none" disabled="disabled">Pay With bKash</button>
+          
+                      <a href="https://shop.bkash.com/aam-niketon01916665136/paymentlink/" target="_blank" class="btn btn-dark"> Pay With Bkash </a>
+          
+                  </div>
+          
+                </div>
+    
+              </div>
+
+            <div class="row">
+
+
+
+                <form action="/get_payment/" method="POST">
+
+                  <div class="col-12">
+
+                    <div class="mb-3">
+
+                        <div class="container p-0">
+
+                            <label for="formGroupExampleInput" class="form-label hind-siliguri">অর্ডার আইডি লিখুন <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                        </div>
+                    
+                        
+                      <input type="text" class="form-control border-dark rounded-3" name="order_id"  placeholder="" required>
+
+                      
+
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+
+                    <div class="mb-3">
+
+                        <div class="container p-0">
+
+                            <label for="formGroupExampleInput" class="form-label hind-siliguri">পেমেন্ট মোবাইল নাম্বার লিখুন <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                        </div>
+                    
+                        
+                      <input type="text" class="form-control border-dark rounded-3" name="payment_mobilenum" placeholder="01XXXXXXXXX" required>
+
+                      
+
+                    </div>
+
+                </div>
+
+                <div class="col-12">
+
+                  <div class="container p-0">
+
+                      <label for="formGroupExampleInput" class="form-label hind-siliguri">Amount <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                  </div>
+                  
+                <input type="text" class="form-control border-dark rounded-3" name="pay_money" placeholder="XXXXXXX" required>
+              </div>
+
+                <div class="col-12">
+
+                    <div class="container p-0">
+
+                        <label for="formGroupExampleInput" class="form-label hind-siliguri">Transaction Id <span class="text-danger fs-6 fw-bold">*</span></label>
+
+                    </div>
+                    
+                  <input type="text" class="form-control border-dark rounded-3" name="transaction_id" placeholder="XXXXXXXXX" required>
+                </div>
+
+
+                 
+
+                 <div class="row mb-3">
+
+               
+
+             
+
+                <div class="col-lg-6 d-flex  align-self-end">
+
+
+                    <div class="container d-flex justify-content-center ">
+
+                        <button type="submit" class="btn btn-dark mt-3 px-5 hind-siliguri"> Submit </button>
+                    
+
+                    </div>
+
+                    
+                    
+                    
+
+                </div>
+
+            </form>
+
+                <div class="col-lg-5 d-flex align-self-end">
+
+
+                    <div class="container d-flex justify-content-center ">
+
+                        <a href="/profile/<%= userId %>" type="button" class="btn btn-outline-dark mt-3 px-5 hind-siliguri">Profile</a>
+
+                    </div>
+
+                    
+                    
+                    
+
+                </div>
+
+
+                 </div> 
+
+                </form>
+
+
+
+
+
+              </div>
+
+        </div>
+
+    </div>
+
+  </div>
+
+  <%- include('footer'); -%>

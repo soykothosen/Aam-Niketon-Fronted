@@ -217,7 +217,7 @@
                     <button class="btn btn-success" type="button" id="button-addon2">Apply</button>
                   </div>
 
-                  <a onclick="Checkout()" class="btn btn-dark" type="button" id="button-addon2">Checkout</a>
+                  <a onclick="Checkout()" href="/checkout" class="btn btn-dark" type="button" id="button-addon2">Checkout</a>
 
             </div>
 
@@ -234,7 +234,7 @@
                     <button class="btn btn-success" type="button" id="button-addon2">Apply</button>
                   </div>
 
-                  <a onclick="Checkoutm()"  class="btn btn-dark" type="button" id="button-addon2">Checkout</a>
+                  <a onclick="Checkoutm()" href="/checkout"  class="btn btn-dark" type="button" id="button-addon2">Checkout</a>
 
             </div>
 
@@ -488,9 +488,9 @@ function Checkout(){
 
                if(data == "Order create successfully"){
 
-                $("#cartmessage").text("আপনার সর্বমোট বিল হয়েছে "+ total_price +"/= টাকা");
+               // $("#cartmessage").text("আপনার সর্বমোট বিল হয়েছে "+ total_price +"/= টাকা");
 
-               $('#staticBackdrop').modal('show');
+             //  $('#staticBackdrop').modal('show');
 
                console.log("Done")
 
@@ -575,9 +575,9 @@ var order = []
 
            if(data == "Order create successfully"){
 
-            $("#cartmessage").text("আপনার সর্বমোট বিল হয়েছে "+ total_price +"/= টাকা");
+           // $("#cartmessage").text("আপনার সর্বমোট বিল হয়েছে "+ total_price +"/= টাকা");
 
-           $('#staticBackdrop').modal('show');
+          // $('#staticBackdrop').modal('show');
 
            console.log("Done")
 
