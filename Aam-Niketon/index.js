@@ -33,6 +33,16 @@ var db = mysql.createConnection({
   });
 
 
+//   var db = mysql.createConnection({
+// 	multipleStatements: true,
+//     host    : 'localhost',
+//     user     : 'codefjhu_soykothosen',
+//     password : 'soykot12',
+//     database : 'codefjhu_aamniketon'
+//   });
+
+
+
   db.connect(function(err){
     if(err){
         throw err;
